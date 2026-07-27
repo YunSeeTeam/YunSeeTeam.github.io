@@ -151,6 +151,15 @@ const CORE_MEMBERS = [
     bio:    '擅长电子取证、流量分析、Top10、SRC 漏洞挖掘。',
     skills: [['电子取证', 60], ['SRC漏洞挖掘', 45], ['综合渗透', 40]],
     links:  { github: '#', blog: '#' }
+  },
+  {
+    handle: '橘猫',
+    name:   '成员 / Member',
+    field:  ['WEB', 'MISC'],
+    since:  2025,
+    bio:    '渗透、取证、Agent 调优。',
+    skills: [['综合渗透', 70], ['电子取证', 60], ['Agent调优', 60]],
+    links:  { github: '#', blog: '#' }
   }
 ];
 
