@@ -437,7 +437,32 @@
   }
 
   /* ======================================================================
-     08. 加入战队
+     08. 友链
+     ====================================================================== */
+  function hostOf(url) {
+    try { return new URL(url).host.replace(/^www\./, ''); }
+    catch (_) { return String(url).replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, ''); }
+  }
+
+  function renderFriends() {
+    $('#flink-list').innerHTML = FRIEND_LINKS.map((f, i) => `
+      <a class="flink" style="--i:${i}" href="${esc(f.url)}" target="_blank" rel="noreferrer">
+        <span class="flink-mark" aria-hidden="true">${esc([...f.name][0] || '#')}</span>
+        <div class="flink-main">
+          <h3>${esc(f.name)}</h3>
+          ${f.desc ? `<p>${esc(f.desc)}</p>` : ''}
+        </div>
+        <span class="flink-host">${esc(hostOf(f.url))}</span>
+        <span class="flink-arrow" aria-hidden="true">↗</span>
+      </a>`).join('');
+
+    $('#flink-mail').textContent = SITE.contactEmail;
+    $('#flink-count').textContent =
+      String(FRIEND_LINKS.length).padStart(2, '0') + ' LINKS';
+  }
+
+  /* ======================================================================
+     09. 加入战队
      ====================================================================== */
   let pickedField = '';
 
@@ -540,7 +565,7 @@
   }
 
   /* ======================================================================
-     09. 页脚
+     10. 页脚
      ====================================================================== */
   function renderFooter() {
     const words = ['WEB', 'PWN', 'REVERSE', 'CRYPTO', 'MISC', 'BLOCKCHAIN',
@@ -569,7 +594,7 @@
   }
 
   /* ======================================================================
-     10. 主题切换
+     11. 主题切换
      ====================================================================== */
   function initTheme() {
     const btn = $('#theme-toggle');
@@ -647,9 +672,9 @@
   }
 
   /* ======================================================================
-     11. 导航 / 滚动
+     12. 导航 / 滚动
      ====================================================================== */
-  const SECTIONS = ['top', 'core', 'club', 'awards', 'projects', 'partners', 'join'];
+  const SECTIONS = ['top', 'core', 'club', 'awards', 'projects', 'partners', 'friends', 'join'];
 
   function initNav() {
     const topbar = $('#topbar');
@@ -698,7 +723,7 @@
   }
 
   /* ======================================================================
-     12. 滚动揭示
+     13. 滚动揭示
      ====================================================================== */
   function initReveal() {
     const io = new IntersectionObserver(entries => {
@@ -734,6 +759,7 @@
   renderAwards();
   renderProjects();
   renderPartners();
+  renderFriends();
   renderJoin();
   renderFooter();
 
