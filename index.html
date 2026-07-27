@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="YunSee CTF 战队官网 — 攻防对抗、漏洞研究与安全竞赛。核心成员、俱乐部成员、赛事奖项、开源项目与招新申请。">
+  <meta name="theme-color" content="#f6f6f3">
+  <title>YunSee // CTF TEAM</title>
+
+  <!-- 内联 SVG 图标：复用签名的第一笔（Y），不额外产生文件与请求 -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='25%2035%20275%20275'%3E%3Crect%20x='25'%20y='35'%20width='275'%20height='275'%20fill='%23eaff00'/%3E%3Cpath%20d='M72%2070C84%20132%20116%20182%20156%20198C198%20180%20228%20126%20244%2070C246%20138%20232%20214%20208%20262C194%20290%20156%20298%20134%20276'%20fill='none'%20stroke='%23101110'%20stroke-width='22'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <!-- 主题需在样式加载前确定，避免刷新闪烁 -->
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('yunsee-theme');
+        document.documentElement.dataset.theme = saved || 'light';
+        document.documentElement.dataset.themeSource = saved ? 'manual' : 'default';
+      } catch (_) {
+        document.documentElement.dataset.theme = 'light';
+        document.documentElement.dataset.themeSource = 'default';
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <noscript><style>#boot{display:none!important}.reveal,[data-stagger]>*{opacity:1!important;transform:none!important}.wm-char{transform:none!important}.mark path{stroke-dashoffset:0!important}</style></noscript>
+</head>
+<body>
+
+<!-- ==========================================================================
+     加载屏 —— YunSee 手写签名逐笔绘制 + 进度轨道 + 幕布擦除
+     ========================================================================== -->
+<div class="boot" id="boot" role="status" aria-live="polite" aria-label="正在加载">
+  <div class="boot-curtain" aria-hidden="true"></div>
+  <div class="boot-rail" aria-hidden="true"><div class="boot-rail-fill" id="boot-fill"></div></div>
+
+  <div class="boot-readout">
+    <span class="boot-percent" id="boot-percent">0%</span>
+    <span class="boot-state" id="boot-state">Initialising</span>
+  </div>
+
+  <div class="boot-mark">
+    <p class="boot-kicker">YUNSEE CAPTURE THE FLAG TEAM</p>
+
+    <!-- 手写签名：6 段笔画，逐笔绘制（Y / u / n / S / e / e） -->
+    <svg class="mark" id="boot-mark" viewBox="52 52 756 262" role="img" aria-label="YunSee">
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path pathLength="1" stroke-width="17" d="M72 70C84 132 116 182 156 198C198 180 228 126 244 70C246 138 232 214 208 262C194 290 156 298 134 276"/>
+        <path pathLength="1" stroke-width="14" d="M288 152C294 136 304 126 310 132C314 150 308 178 314 192C322 206 342 204 350 186C356 166 360 142 366 132C372 138 368 172 370 190C374 206 392 206 404 186"/>
+        <path pathLength="1" stroke-width="14" d="M400 190C410 158 420 136 428 130C434 140 430 170 432 196C436 168 444 140 458 132C470 128 478 142 478 164C478 180 476 190 478 198C482 208 498 206 508 190"/>
+        <path pathLength="1" stroke-width="17" d="M642 96C634 76 612 68 590 74C566 80 556 100 566 116C576 134 606 138 624 152C644 168 640 194 616 204C592 214 566 206 556 188"/>
+        <path pathLength="1" stroke-width="14" d="M648 186C674 164 692 148 686 140C678 132 662 148 658 170C654 192 666 208 684 205C698 202 708 192 716 180"/>
+        <path pathLength="1" stroke-width="14" d="M712 184C732 160 750 144 744 138C736 130 720 148 716 170C712 192 724 208 742 205C760 202 776 188 788 168"/>
+      </g>
+    </svg>
+
+    <div class="boot-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="boot-rule"></div>
+    <p class="boot-tag">BEYOND THE FLAG / INTO THE SYSTEM</p>
+  </div>
+
+  <button class="boot-skip" id="boot-skip" type="button">跳过 / ESC</button>
+</div>
+
+<!-- ==========================================================================
+     页眉
+     ========================================================================== -->
+<header class="topbar" id="topbar">
+  <a class="topbar-mark" href="#top" aria-label="YunSee 返回顶部">
+    <svg class="mark mark--fast" id="head-mark" viewBox="52 52 756 262" role="img" aria-label="YunSee">
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path pathLength="1" stroke-width="17" d="M72 70C84 132 116 182 156 198C198 180 228 126 244 70C246 138 232 214 208 262C194 290 156 298 134 276"/>
+        <path pathLength="1" stroke-width="14" d="M288 152C294 136 304 126 310 132C314 150 308 178 314 192C322 206 342 204 350 186C356 166 360 142 366 132C372 138 368 172 370 190C374 206 392 206 404 186"/>
+        <path pathLength="1" stroke-width="14" d="M400 190C410 158 420 136 428 130C434 140 430 170 432 196C436 168 444 140 458 132C470 128 478 142 478 164C478 180 476 190 478 198C482 208 498 206 508 190"/>
+        <path pathLength="1" stroke-width="17" d="M642 96C634 76 612 68 590 74C566 80 556 100 566 116C576 134 606 138 624 152C644 168 640 194 616 204C592 214 566 206 556 188"/>
+        <path pathLength="1" stroke-width="14" d="M648 186C674 164 692 148 686 140C678 132 662 148 658 170C654 192 666 208 684 205C698 202 708 192 716 180"/>
+        <path pathLength="1" stroke-width="14" d="M712 184C732 160 750 144 744 138C736 130 720 148 716 170C712 192 724 208 742 205C760 202 776 188 788 168"/>
+      </g>
+    </svg>
+    <span class="topbar-sub" id="topbar-sub">CTF TEAM</span>
+  </a>
+
+  <nav class="topnav" id="topnav" aria-label="主导航">
+    <a href="#core"     data-target="core"><i>01</i>核心成员</a>
+    <a href="#club"     data-target="club"><i>02</i>俱乐部成员</a>
+    <a href="#awards"   data-target="awards"><i>03</i>战队奖项</a>
+    <a href="#projects" data-target="projects"><i>04</i>开源项目</a>
+    <a href="#partners" data-target="partners"><i>05</i>合作伙伴</a>
+    <a href="#join"     data-target="join"><i>06</i>加入我们</a>
+  </nav>
+
+  <div class="topbar-tools">
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="切换颜色主题">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    </button>
+    <a class="btn btn--solid" href="#join"><span>加入战队</span></a>
+    <button class="burger" id="burger" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menu"><span></span></button>
+  </div>
+</header>
+
+<!-- 移动端全屏菜单 -->
+<nav class="menu" id="menu" aria-label="移动端导航">
+  <a href="#core"     style="--i:0"><i>01</i>核心成员</a>
+  <a href="#club"     style="--i:1"><i>02</i>俱乐部成员</a>
+  <a href="#awards"   style="--i:2"><i>03</i>战队奖项</a>
+  <a href="#projects" style="--i:3"><i>04</i>开源项目</a>
+  <a href="#partners" style="--i:4"><i>05</i>合作伙伴</a>
+  <a href="#join"     style="--i:5"><i>06</i>加入我们</a>
+</nav>
+
+<!-- 右侧章节指示轨 -->
+<nav class="rail" id="rail" aria-label="章节导航">
+  <a href="#top"      data-target="top"><span>TOP</span></a>
+  <a href="#core"     data-target="core"><span>核心成员</span></a>
+  <a href="#club"     data-target="club"><span>俱乐部成员</span></a>
+  <a href="#awards"   data-target="awards"><span>战队奖项</span></a>
+  <a href="#projects" data-target="projects"><span>开源项目</span></a>
+  <a href="#partners" data-target="partners"><span>合作伙伴</span></a>
+  <a href="#join"     data-target="join"><span>加入我们</span></a>
+</nav>
+
+<main>
+  <!-- ========================================================================
+       首屏
+       ======================================================================== -->
+  <section class="hero" id="top">
+    <div class="hero-block" aria-hidden="true">CTF
+TEAM</div>
+
+    <div class="hero-meta">
+      <p class="eyebrow"><strong>YunSee Capture The Flag Team</strong><br>攻防对抗 / 漏洞研究 / 安全竞赛</p>
+      <span class="state"><i></i><span>RECRUITING OPEN</span></span>
+    </div>
+
+    <h1 class="wordmark"><span class="slashes"></span><span id="wordmark-text">YUNSEE</span></h1>
+
+    <div class="hero-caption">
+      <p id="hero-intro"></p>
+      <div class="signal-squares" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="hero-stats" id="hero-stats">
+      <div class="hero-stat"><span>Established</span><b id="stat-founded" data-plain="1">—</b><em>战队成立年份</em></div>
+      <div class="hero-stat"><span>Active members</span><b data-count-key="members">—</b><em>核心 + 俱乐部成员</em></div>
+      <div class="hero-stat"><span>Awards</span><b data-count-key="awards">—</b><em>累计赛事获奖</em></div>
+      <div class="hero-stat"><span>Open source</span><b data-count-key="projects">—</b><em>公开开源项目</em></div>
+    </div>
+  </section>
+
+  <div class="workspace">
+
+    <!-- ======================================================================
+         01 核心成员
+         ====================================================================== -->
+    <section class="section reveal" id="core">
+      <div class="section-grid">
+        <div class="section-intro">
+          <div>
+            <span class="section-number">01 / CORE ROSTER</span>
+            <h2 class="section-title"><small>CORE MEMBERS</small>核心成员</h2>
+          </div>
+          <p class="section-copy">战队常驻作战阵容，覆盖 Web、PWN、逆向、密码、杂项与研发方向。</p>
+          <div class="micro-code" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="content-stack">
+          <div class="core-grid" id="core-grid" data-stagger></div>
+        </div>
+
+        <aside class="section-rail" data-code="YS / 001" aria-label="核心成员">
+          <strong>CORE</strong><span>OPERATIONAL LINEUP</span>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         02 俱乐部成员
+         ====================================================================== -->
+    <section class="section section--flip reveal" id="club">
+      <div class="section-grid">
+        <div class="section-intro">
+          <div>
+            <span class="section-number">02 / CLUB ROSTER</span>
+            <h2 class="section-title"><small>CLUB MEMBERS</small>俱乐部成员</h2>
+          </div>
+          <p class="section-copy">外围与训练营成员名册，按主攻方向筛选查看，随赛季持续更新。</p>
+          <div class="micro-code" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="content-stack">
+          <div class="roster-head">
+            <div class="switcher" id="roster-filter" role="group" aria-label="按方向筛选"></div>
+            <span class="meta" id="roster-count">—</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>#</th><th>代号</th><th>主攻方向</th><th>加入</th><th>状态</th></tr>
+              </thead>
+              <tbody id="club-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <aside class="section-rail section-rail--mute" data-code="YS / 002" aria-label="俱乐部成员">
+          <strong>CLUB</strong><span>RESERVE / TRAINING</span>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         03 战队奖项
+         ====================================================================== -->
+    <section class="section reveal" id="awards">
+      <div class="section-grid">
+        <div class="section-intro">
+          <div>
+            <span class="section-number">03 / TRACK RECORD</span>
+            <h2 class="section-title"><small>AWARDS</small>战队奖项</h2>
+          </div>
+          <p class="section-copy">从省级选拔到国际赛事的完整战绩记录，按时间倒序排列。</p>
+          <div class="micro-code" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="content-stack">
+          <div class="kpi-grid" id="award-kpis">
+            <article class="kpi">
+              <div class="kpi-top"><span class="kpi-label">Total awards</span><span class="kpi-index">001</span></div>
+              <div class="kpi-value" data-count-key="awards"><div class="skel"></div></div>
+              <div class="kpi-unit">累计获奖次数</div>
+            </article>
+            <article class="kpi">
+              <div class="kpi-top"><span class="kpi-label">National</span><span class="kpi-index">002</span></div>
+              <div class="kpi-value" data-count-key="national"><div class="skel"></div></div>
+              <div class="kpi-unit">国家级及以上</div>
+            </article>
+            <article class="kpi">
+              <div class="kpi-top"><span class="kpi-label">International</span><span class="kpi-index">003</span></div>
+              <div class="kpi-value" data-count-key="intl"><div class="skel"></div></div>
+              <div class="kpi-unit">国际赛事入围</div>
+            </article>
+            <article class="kpi">
+              <div class="kpi-top"><span class="kpi-label">Championships</span><span class="kpi-index">004</span></div>
+              <div class="kpi-value" data-count-key="champion"><div class="skel"></div></div>
+              <div class="kpi-unit">冠军 / 一等奖</div>
+            </article>
+          </div>
+          <div class="awards-wrap" id="awards-wrap">
+            <ul class="awards" id="award-list" data-stagger></ul>
+            <div class="awards-more" id="awards-more" aria-hidden="true">
+              <div><ul class="awards" id="award-more"></ul></div>
+            </div>
+            <button class="awards-toggle" id="awards-toggle" type="button"
+                    aria-expanded="false" aria-controls="awards-more" hidden>
+              <span id="awards-toggle-label">展开全部</span>
+              <span class="awards-toggle-icon" aria-hidden="true">↓</span>
+            </button>
+          </div>
+        </div>
+
+        <aside class="section-rail" data-code="YS / 003" aria-label="战队奖项">
+          <strong>AWARDS</strong><span>COMPETITION RECORD</span>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         04 开源项目
+         ====================================================================== -->
+    <section class="section section--flip reveal" id="projects">
+      <div class="section-grid">
+        <div class="section-intro">
+          <div>
+            <span class="section-number">04 / OPEN SOURCE</span>
+            <h2 class="section-title"><small>GITHUB PROJECTS</small>开源项目</h2>
+          </div>
+          <p class="section-copy">战队在 GitHub 上持续维护的工具链与知识库，欢迎 Issue 与 PR。</p>
+          <div class="micro-code" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="content-stack">
+          <div class="roster-head">
+            <span class="meta" id="proj-org">GITHUB</span>
+            <a class="btn" id="proj-all" href="#" target="_blank" rel="noreferrer"><span>查看全部仓库</span><span>↗</span></a>
+          </div>
+          <div class="proj-grid" id="proj-grid" data-stagger></div>
+        </div>
+
+        <aside class="section-rail section-rail--mute" data-code="YS / 004" aria-label="开源项目">
+          <strong>SOURCE</strong><span>TOOLCHAIN / DOCS</span>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         05 合作伙伴
+         ====================================================================== -->
+    <section class="section reveal" id="partners">
+      <div class="section-grid">
+        <div class="section-intro">
+          <div>
+            <span class="section-number">05 / ALLIANCE</span>
+            <h2 class="section-title"><small>PARTNERS</small>合作伙伴</h2>
+          </div>
+          <p class="section-copy">与我们长期共建的平台、实验室与安全团队，共享靶场资源与研究成果。</p>
+          <div class="micro-code" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="content-stack">
+          <div class="partner-grid" id="partner-grid" data-stagger></div>
+        </div>
+
+        <aside class="section-rail" data-code="YS / 005" aria-label="合作伙伴">
+          <strong>ALLY</strong><span>PLATFORM / LAB / TEAM</span>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         06 加入战队
+         ====================================================================== -->
+    <section class="section section--flip reveal" id="join">
+      <div class="section-grid">
+        <div class="section-intro">
+          <div>
+            <span class="section-number">06 / RECRUITMENT</span>
+            <h2 class="section-title"><small>JOIN THE TEAM</small>加入我们</h2>
+          </div>
+          <p class="section-copy">填写邮箱并选择方向，点击投递即可唤起系统默认邮件客户端。</p>
+          <div class="micro-code" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="content-stack">
+          <div class="join">
+            <div class="join-copy">
+              <h3>我们在找什么样的队友</h3>
+              <p>常年招新，全年任何时间都可以投递。收到申请后我们会在 3—7 天内回复并安排一次线上交流。</p>
+              <ol class="join-list" id="join-list"></ol>
+            </div>
+
+            <form class="join-form" id="join-form" novalidate>
+              <div class="field" id="field-email">
+                <label for="join-email">你的邮箱 <em>required</em></label>
+                <input class="input" id="join-email" name="email" type="email" inputmode="email"
+                       autocomplete="email" placeholder="you@example.com" required>
+                <span class="field-msg" id="email-msg"></span>
+              </div>
+
+              <div class="field">
+                <span class="flabel" id="field-group-label">意向方向 <em>optional</em></span>
+                <div class="pill-group" id="field-group" role="group" aria-labelledby="field-group-label"></div>
+              </div>
+
+              <div class="field">
+                <label for="join-note">一句话自我介绍 <em>optional</em></label>
+                <textarea class="textarea" id="join-note" name="note"
+                          placeholder="做过的题、打过的比赛、感兴趣的方向…"></textarea>
+              </div>
+
+              <button class="submit" id="join-submit" type="submit">
+                <span class="submit-fill" aria-hidden="true"></span>
+                <span class="submit-label">投递申请<span class="submit-arrow">↗</span></span>
+              </button>
+
+              <p class="join-hint">
+                点击后将唤起系统默认邮件客户端，收件人：<b id="join-target">—</b><br>
+                <span id="join-fallback">若未自动打开，可手动复制上方邮箱发送申请。</span>
+              </p>
+            </form>
+          </div>
+        </div>
+
+        <aside class="section-rail" data-code="YS / 006" aria-label="加入我们">
+          <strong>JOIN</strong><span>OPEN RECRUITMENT</span>
+        </aside>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ==========================================================================
+     页脚
+     ========================================================================== -->
+<footer class="footer" id="site-footer">
+  <div class="footer-top">
+    <div class="footer-sign">
+      <svg class="mark" id="foot-mark" viewBox="52 52 756 262" role="img" aria-label="YunSee">
+        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path pathLength="1" stroke-width="17" d="M72 70C84 132 116 182 156 198C198 180 228 126 244 70C246 138 232 214 208 262C194 290 156 298 134 276"/>
+          <path pathLength="1" stroke-width="14" d="M288 152C294 136 304 126 310 132C314 150 308 178 314 192C322 206 342 204 350 186C356 166 360 142 366 132C372 138 368 172 370 190C374 206 392 206 404 186"/>
+          <path pathLength="1" stroke-width="14" d="M400 190C410 158 420 136 428 130C434 140 430 170 432 196C436 168 444 140 458 132C470 128 478 142 478 164C478 180 476 190 478 198C482 208 498 206 508 190"/>
+          <path pathLength="1" stroke-width="17" d="M642 96C634 76 612 68 590 74C566 80 556 100 566 116C576 134 606 138 624 152C644 168 640 194 616 204C592 214 566 206 556 188"/>
+          <path pathLength="1" stroke-width="14" d="M648 186C674 164 692 148 686 140C678 132 662 148 658 170C654 192 666 208 684 205C698 202 708 192 716 180"/>
+          <path pathLength="1" stroke-width="14" d="M712 184C732 160 750 144 744 138C736 130 720 148 716 170C712 192 724 208 742 205C760 202 776 188 788 168"/>
+        </g>
+      </svg>
+      <p class="footer-tag">BEYOND THE FLAG / INTO THE SYSTEM</p>
+    </div>
+
+    <div class="footer-cols">
+      <div>
+        <h4>站内</h4>
+        <a href="#core">核心成员</a>
+        <a href="#club">俱乐部成员</a>
+        <a href="#awards">战队奖项</a>
+        <a href="#projects">开源项目</a>
+        <a href="#partners">合作伙伴</a>
+        <a href="#join">加入我们</a>
+      </div>
+      <div>
+        <h4>资源</h4>
+        <a id="foot-github" href="#" target="_blank" rel="noreferrer">GitHub 组织 ↗</a>
+        <a id="foot-wiki" href="#" target="_blank" rel="noreferrer">公开知识库 ↗</a>
+        <a href="#projects">工具链一览</a>
+      </div>
+      <div>
+        <h4>联系</h4>
+        <a id="foot-mail" href="#">—</a>
+        <span id="foot-qq">—</span>
+        <span id="foot-loc">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track" id="ticker-a"></div>
+    <div class="ticker-track" id="ticker-b"></div>
+  </div>
+
+  <div class="footer-bottom">
+    <span><b id="foot-name">YUNSEE</b> / CTF TEAM · <span id="foot-est">EST.</span></span>
+    <span id="build-stamp">BUILD / —</span>
+    <span>© <span id="year"></span> <span id="foot-name2">YunSee</span>. ALL RIGHTS RESERVED.</span>
+  </div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
