@@ -161,7 +161,6 @@ const CORE_MEMBERS = [
    多方向成员在任一方向的筛选下都会出现。
    -------------------------------------------------------------------------- */
 const CLUB_MEMBERS = [
-  { handle: 'Huaji',      field: 'WEB',         since: 2025, status: '在役' },
   { handle: '世茶之火',   field: ['RE', 'PWN'], since: 2025, status: '在役' },
   { handle: 'dnw',        field: 'WEB',         since: 2025, status: '训练营' },
   { handle: 'jake',       field: 'WEB',         since: 2026, status: '训练营' },
