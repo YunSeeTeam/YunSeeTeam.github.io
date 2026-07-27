@@ -2,3 +2,7 @@
 Thumbs.db
 desktop.ini
 *.log
+
+# 图标源文件（4952x4968 / 3.1MB），仅用于生成 assets/ico/ 下的图标，
+# 不入库以免永久撑大 git 历史。需要在页面上展示 logo 时再单独压缩一份提交。
+assets/ico/logo.png
