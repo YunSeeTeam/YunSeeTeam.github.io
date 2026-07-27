@@ -166,7 +166,8 @@ const CLUB_MEMBERS = [
   { handle: 'jake',       field: 'WEB',         since: 2026, status: '训练营' },
   { handle: '懒羊羊大王', field: 'WEB',         since: 2026, status: '训练营' },
   { handle: '小猫咪',     field: 'CRYPTO',      since: 2026, status: '训练营' },
-  { handle: 'Xray Wire Link',     field: 'WEB',      since: 2026, status: '训练营' }
+  { handle: 'Xray Wire Link',     field: 'WEB',      since: 2026, status: '训练营' },
+  { handle: 'Odlteyl',    field: 'WEB',         since: 2026, status: '训练营' }
 ];
 
 /* --------------------------------------------------------------------------
