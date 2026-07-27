@@ -260,6 +260,11 @@ const FRIEND_LINKS = [
     name: 'TianFu Sec',
     desc: '',
     url:  'https://tianfusec.top/'
+  },
+  {
+    name: 'LUOYE BLOG',
+    desc: '写代码，也写生活里的风。',
+    url:  'https://luoyeye.cn/'
   }
 ];
 
