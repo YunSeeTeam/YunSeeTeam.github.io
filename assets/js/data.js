@@ -162,7 +162,6 @@ const CORE_MEMBERS = [
    -------------------------------------------------------------------------- */
 const CLUB_MEMBERS = [
   { handle: 'Huaji',      field: 'WEB',         since: 2025, status: '在役' },
-  { handle: 'theshyXD',   field: 'RE',          since: 2025, status: '在役' },
   { handle: '世茶之火',   field: ['RE', 'PWN'], since: 2025, status: '在役' },
   { handle: 'dnw',        field: 'WEB',         since: 2025, status: '训练营' },
   { handle: 'jake',       field: 'WEB',         since: 2026, status: '训练营' },
