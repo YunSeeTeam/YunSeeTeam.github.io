@@ -194,14 +194,14 @@ const CLUB_MEMBERS = [
    level: 国际 / 国家级 / 省级 / 行业
    -------------------------------------------------------------------------- */
 const AWARDS = [
-  { year: 2026, event: '长城杯半决赛',            rank: '一等奖',   level: '国家级', note: '橘猫 & 瓜皮唐' },
-  { year: 2026, event: '长城杯总决赛',            rank: '三等奖',   level: '国家级', note: '橘猫 & 瓜皮唐' },
   { year: 2026, event: 'D^3CTF', rank: '三等奖',   level: '行业', note: '排名第三' },
   { year: 2026, event: 'NepCTF',                  rank: '一等奖',   level: '行业',   note: '排名第二' },
   { year: 2026, event: 'H&NCTF',            rank: '一等奖',   level: '行业', note: '排名第二' },
   { year: 2026, event: '国际盘古石杯电子取证大赛',                rank: '二等奖',   level: '国际', note: 'APK&流量分析&内存取证零失分' },
   { year: 2026, event: '河南省御网杯网络安全大赛',                  rank: '一等奖',  level: '国家级',   note: '应急响应&安全加固零失分' },
   { year: 2026, event: '獬豸杯电子取证大赛',               rank: '一等奖',   level: '行业',   note: '排名第一' },
+  { year: 2026, event: '长城杯半决赛',            rank: '一等奖',   level: '国家级', note: '橘猫 & 瓜皮唐' },
+  { year: 2026, event: '长城杯总决赛',            rank: '三等奖',   level: '国家级', note: '橘猫 & 瓜皮唐' },
   { year: 2026, event: 'FIC电子取证大赛',                 rank: '三等奖',   level: '国家级',   note: '*' },
   { year: 2026, event: 'PolarisCTF',              rank: '三等奖',     level: '行业', note: '排名第九' },
   { year: 2025, event: '“羊城杯” 粤港澳大湾区网络安全大赛',        rank: '三等奖',     level: '国家级',   note: '数据安全零失分' },
