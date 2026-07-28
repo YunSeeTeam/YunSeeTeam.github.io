@@ -224,7 +224,44 @@
           <div class="core-skills">${skills}</div>
           ${links ? `<div class="core-links">${links}</div>` : ''}
         </article>`;
-    }).join('');
+    }).join('')
+    // 末位固定一张招新卡：既补上网格空位，也把空缺变成招新入口
+    + `
+        <a class="core-card core-card--open" style="--i:${CORE_MEMBERS.length}" href="#join">
+          <div class="core-top">
+            <div class="core-avatar" aria-hidden="true">+</div>
+            <span class="core-index">OPEN / 招新中</span>
+          </div>
+          <h3 class="core-handle">虚位以待</h3>
+          <p class="core-role">RECRUITING · 常年招新</p>
+          <p class="core-bio">不限学校与年级，各方向均在招。填写邮箱投递即可开始。</p>
+          <div class="core-skills"></div>
+          <div class="core-links"><span class="core-open-cta">加入战队 ↗</span></div>
+        </a>`;
+  }
+
+  /* 网格补位：卡片数不是列数整倍数时，末行会露出网格底色（--line）像块空灰格。
+     列数随断点变化，所以按当前实际列数动态补透明占位格。 */
+  function fillGrid(grid) {
+    if (!grid) return;
+    [...grid.querySelectorAll('.grid-filler')].forEach(el => el.remove());
+    const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
+    const items = grid.children.length;
+    const need = cols > 1 ? (cols - (items % cols)) % cols : 0;
+    for (let i = 0; i < need; i++) {
+      const d = document.createElement('div');
+      d.className = 'grid-filler';
+      d.setAttribute('aria-hidden', 'true');
+      grid.appendChild(d);
+    }
+  }
+
+  function initGridFill() {
+    const grids = ['#core-grid', '#proj-grid', '#partner-grid'].map(s => $(s));
+    const run = () => grids.forEach(fillGrid);
+    run();
+    let t;
+    addEventListener('resize', () => { clearTimeout(t); t = setTimeout(run, 150); });
   }
 
   /* ======================================================================
@@ -765,6 +802,7 @@
 
   initTheme();
   initNav();
+  initGridFill();
   initReveal();
   initCounters();
   initJoinForm();

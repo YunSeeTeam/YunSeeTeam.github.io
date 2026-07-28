@@ -850,6 +850,31 @@ html[data-theme="dark"] .content-stack { box-shadow: 0 18px 50px rgba(0, 0, 0, .
 .visible .skill-bar span { transform: scaleX(1); }
 .core-card:hover .skill-bar span { background: #000; }
 
+/* 招新占位卡：虚线内描边与实名成员卡区分，交互沿用同一套信号色推入 */
+.core-card--open { outline: 1px dashed var(--line); outline-offset: -1px; }
+.core-card--open .core-handle { color: var(--muted); }
+.core-card--open:hover .core-handle { color: #000; }
+.core-card--open .core-avatar { font-size: 26px; font-weight: 700; }
+.core-card--open .core-skills { min-height: 0; }
+.core-open-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  box-shadow: inset 0 0 0 1px var(--line);
+  font: 10px/1 var(--mono);
+  letter-spacing: .08em;
+  transition: color .25s, background-color .25s, box-shadow .25s;
+}
+.core-card--open:hover .core-open-cta {
+  color: var(--signal);
+  background: #000;
+  box-shadow: inset 0 0 0 1px #000;
+}
+
+/* 网格末行的透明补位格，避免露出网格底色 */
+.grid-filler { background: var(--panel); }
+
 .core-links { display: flex; gap: 8px; margin-top: 18px; }
 .core-links a,
 .core-links span {
