@@ -160,6 +160,15 @@ const CORE_MEMBERS = [
     bio:    '渗透、取证、Agent 调优。',
     skills: [['综合渗透', 70], ['电子取证', 60], ['Agent调优', 60]],
     links:  { github: '#', blog: '#' }
+  },
+  {
+    handle: 'f109',
+    name:   '成员 / Member',
+    field:  'WEB',
+    since:  2026,
+    bio:    '擅长逻辑类以及注入类漏洞的挖掘。',
+    skills: [['web渗透', 99], ['代码审计', 95], ['应急响应', 66]],
+    links:  { github: '#', blog: '#' }
   }
 ];
 
@@ -185,6 +194,8 @@ const CLUB_MEMBERS = [
    level: 国际 / 国家级 / 省级 / 行业
    -------------------------------------------------------------------------- */
 const AWARDS = [
+  { year: 2026, event: '长城杯半决赛',            rank: '一等奖',   level: '国家级', note: '橘猫 & 瓜皮唐' },
+  { year: 2026, event: '长城杯总决赛',            rank: '三等奖',   level: '国家级', note: '橘猫 & 瓜皮唐' },
   { year: 2026, event: 'D^3CTF', rank: '三等奖',   level: '行业', note: '排名第三' },
   { year: 2026, event: 'NepCTF',                  rank: '一等奖',   level: '行业',   note: '排名第二' },
   { year: 2026, event: 'H&NCTF',            rank: '一等奖',   level: '行业', note: '排名第二' },
