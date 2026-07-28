@@ -128,7 +128,9 @@ qqGroup:      '1145141919',
   `repeating-*-gradient`。加载屏底纹用纯色 SVG 点阵 data-URI，骨架屏用纯色块位移代替微光扫描。
 - **零外部依赖**。不加载 Web Font、不引 CDN、不发 `fetch`，因此可直接用 `file://` 打开，
   也可以扔进任意静态托管（GitHub Pages / Vercel / Cloudflare Pages）。
-- **深浅双主题**。跟随系统偏好，手动切换后写入 `localStorage`。
+- **深浅双主题，默认夜间**。首次访问一律夜间（不跟随 `prefers-color-scheme`，否则浅色系统会把
+  默认拉回白天）；用户手动切换后写入 `localStorage` 并长期沿用。主题在 `<head>` 内联脚本里
+  于样式加载前定好，刷新不会闪白。
 - **响应式断点**：1240 / 1040 / 860 / 560px，移动端页眉收起为全屏菜单。
 - **无障碍**：尊重 `prefers-reduced-motion`（关闭全部动画并直接显示完整签名）、
   焦点可见环、语义化表单标签与 ARIA 标注。

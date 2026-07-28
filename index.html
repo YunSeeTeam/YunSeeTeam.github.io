@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="dark light">
   <meta name="description" content="YunSee CTF 战队官网 — 攻防对抗、漏洞研究与安全竞赛。核心成员、俱乐部成员、赛事奖项、开源项目与招新申请。">
-  <meta name="theme-color" content="#f6f6f3">
+  <meta name="theme-color" content="#0e0f0e">
   <title>YunSee // CTF TEAM</title>
 
   <!-- 站点图标：战队 logo 的凤凰主体（已去掉字标，字标在 16px 下不可读）
@@ -15,17 +15,17 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/ico/favicon-16.png">
   <link rel="apple-touch-icon" href="assets/ico/apple-touch-icon.png">
 
-  <!-- 主题需在样式加载前确定，避免刷新闪烁 -->
+  <!-- 主题需在样式加载前确定，避免刷新闪烁。
+       首次访问一律夜间；用户手动切换后写入 localStorage 并长期沿用。 -->
   <script>
     (() => {
+      let theme = 'dark', source = 'default';
       try {
         const saved = localStorage.getItem('yunsee-theme');
-        document.documentElement.dataset.theme = saved || 'light';
-        document.documentElement.dataset.themeSource = saved ? 'manual' : 'default';
-      } catch (_) {
-        document.documentElement.dataset.theme = 'light';
-        document.documentElement.dataset.themeSource = 'default';
-      }
+        if (saved === 'light' || saved === 'dark') { theme = saved; source = 'manual'; }
+      } catch (_) { /* 隐私模式下 localStorage 不可用，回落到夜间默认 */ }
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.themeSource = source;
     })();
   </script>
 

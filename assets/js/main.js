@@ -635,7 +635,6 @@
      ====================================================================== */
   function initTheme() {
     const btn = $('#theme-toggle');
-    const sys = matchMedia('(prefers-color-scheme: dark)');
     let animating = false;
 
     const sync = () => {
@@ -647,17 +646,9 @@
       if (meta) meta.setAttribute('content', dark ? '#0e0f0e' : '#f6f6f3');
     };
 
-    if (document.documentElement.dataset.themeSource === 'default') {
-      document.documentElement.dataset.theme = sys.matches ? 'dark' : 'light';
-      document.documentElement.dataset.themeSource = 'system';
-    }
+    // 主题已由 head 里的内联脚本定好（默认夜间 / 或读取用户此前的手动选择），
+    // 这里不再按 prefers-color-scheme 覆盖，否则浅色系统会把默认拉回白天。
     sync();
-
-    sys.addEventListener('change', e => {
-      if (document.documentElement.dataset.themeSource !== 'system') return;
-      document.documentElement.dataset.theme = e.matches ? 'dark' : 'light';
-      sync();
-    });
 
     btn.addEventListener('click', async () => {
       if (animating) return;
