@@ -32,6 +32,8 @@ const FIELDS = [
   { key: 'RE',     label: '逆向工程' },
   { key: 'CRYPTO', label: '密码学' },
   { key: 'MISC',   label: '杂项取证' },
+  { key: 'IOT',    label: 'IoT 安全' },
+  { key: 'OSINT',  label: '开源情报' },
   { key: 'IR',     label: '应急响应' },
   { key: 'DEV',    label: '软件开发' },
   { key: 'BC',     label: '区块链' }
@@ -182,11 +184,13 @@ const CLUB_MEMBERS = [
   { handle: '世茶之火',   field: ['RE', 'PWN'], since: 2025, status: '在役' },
   { handle: 'dnw',        field: 'WEB',         since: 2025, status: '训练营' },
   { handle: 'jake',       field: 'WEB',         since: 2026, status: '训练营' },
-  { handle: '懒羊羊大王', field: 'WEB',         since: 2026, status: '训练营' },
+  { handle: '懒羊羊大王', field: 'WEB',         since: 2026, status: '在役' },
   { handle: '小猫咪',     field: 'CRYPTO',      since: 2026, status: '训练营' },
   { handle: 'Xray Wire Link',     field: 'WEB',      since: 2026, status: '训练营' },
   { handle: 'Odlteyl',    field: 'WEB',         since: 2026, status: '训练营' },
-  { handle: '晨肖',       field: 'RE',          since: 2026, status: '训练营' }
+  { handle: '晨肖',       field: 'RE',          since: 2026, status: '训练营' },
+  { handle: '崔叔233',    field: 'IOT',         since: 2026, status: '训练营' },
+  { handle: 'KelosPu',    field: 'OSINT',       since: 2026, status: '训练营' }
 ];
 
 /* --------------------------------------------------------------------------
@@ -194,7 +198,7 @@ const CLUB_MEMBERS = [
    level: 国际 / 国家级 / 省级 / 行业
    -------------------------------------------------------------------------- */
 const AWARDS = [
-  { year: 2026, event: 'D^3CTF', rank: '三等奖',   level: '行业', note: '排名第三' },
+  { year: 2026, event: 'D^3CTF', rank: '一等奖',   level: '行业', note: '排名第二' },
   { year: 2026, event: 'NepCTF',                  rank: '一等奖',   level: '行业',   note: '排名第二' },
   { year: 2026, event: 'H&NCTF',            rank: '一等奖',   level: '行业', note: '排名第二' },
   { year: 2026, event: '国际盘古石杯电子取证大赛',                rank: '二等奖',   level: '国际', note: 'APK&流量分析&内存取证零失分' },
