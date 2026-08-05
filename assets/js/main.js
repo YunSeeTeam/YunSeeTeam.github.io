@@ -403,6 +403,15 @@
       `${String(list.length).padStart(2, '0')} / ${String(CLUB_MEMBERS.length).padStart(2, '0')} MEMBERS`;
   }
 
+  function renderClubTip() {
+    if (typeof CLUB_TIP !== 'object' || !CLUB_TIP) { $('#club-tip').hidden = true; return; }
+    $('#club-tip-title').textContent = CLUB_TIP.title || '';
+    $('#club-tip-text').textContent  = CLUB_TIP.body  || '';
+    const note = $('#club-tip-note');
+    note.textContent = CLUB_TIP.note || '';
+    note.hidden = !CLUB_TIP.note;
+  }
+
   /* ======================================================================
      05. 战队奖项
      ====================================================================== */
@@ -877,6 +886,7 @@
   renderCore();
   renderRosterFilter();
   renderRoster();
+  renderClubTip();
   renderAwards();
   renderProjects();
   renderPartners();
