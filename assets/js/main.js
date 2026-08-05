@@ -159,8 +159,39 @@
      ==================================================================== */
   const MARKS = {};
 
+  /* Vara 自带的笔画推进是 setInterval + 硬编码 1000/30，也就是无论屏幕多少赫兹
+     都只画 30 帧，且定时器不与显示刷新同步，会额外抖动、后台标签页里空转。
+     这里把它的逐帧原语换成 requestAnimationFrame：帧率天然跟随设备刷新率
+     （60 / 120 / 144Hz 各自匹配），与 vsync 对齐，页面不可见时浏览器自动暂停。
+     改的是 prototype 上的方法，vendor 里的库文件保持原厂，升级不会丢。 */
+  let varaPatched = false;
+
+  function patchVaraFrameRate() {
+    if (varaPatched || typeof Vara !== 'function' || !Vara.prototype.animate) return;
+    varaPatched = true;
+
+    // 原签名 animate(path, duration, delay, target)：
+    // 等 delay 毫秒后，用 duration 毫秒把 path 的 strokeDashoffset 线性推到 target
+    Vara.prototype.animate = function (path, duration, delay, target) {
+      const to = +target || 0;
+      setTimeout(() => {
+        const from = parseFloat(path.style.strokeDashoffset);
+        let t0 = 0;
+        const step = now => {
+          if (!t0) t0 = now;                 // 以第一帧为起点，避免调度抖动吃掉开头
+          // duration 为 0 时（reduced-motion 传 1 也几乎等价）直接一帧到位
+          const p = duration > 0 ? Math.min(1, (now - t0) / duration) : 1;
+          path.style.strokeDashoffset = from + p * (to - from);
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }, delay);
+    };
+  }
+
   function initMarks() {
     if (typeof Vara !== 'function' || !window.VARA_FONT) return;
+    patchVaraFrameRate();
 
     let fontUrl;
     try {
