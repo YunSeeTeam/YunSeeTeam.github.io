@@ -35,7 +35,6 @@
   const bootFill  = $('#boot-fill');
   const bootPct   = $('#boot-percent');
   const bootState = $('#boot-state');
-  const bootMark  = $('#boot-mark');
   const readout   = bootPct.parentElement;
 
   let repeatVisit = false;
@@ -98,7 +97,7 @@
     setTimeout(() => {
       boot.classList.add('is-leaving');
       document.body.classList.add('is-booted');
-      drawMark($('#head-mark'));
+      drawMark('head');
       flashCards();
     }, 900);
     setTimeout(() => boot.classList.add('is-done'), 1740);
@@ -122,11 +121,9 @@
     if (reduceMotion.matches) {
       boot.classList.add('is-done', 'is-leaving');
       document.body.classList.add('is-booted');
-      $$('.mark').forEach(m => m.classList.add('is-drawn'));
+      drawMark('head');                    // 签名直接以完成态显示
       return;
     }
-    bootMark.style.setProperty('--k', repeatVisit ? '0.5' : '1');
-    bootMark.classList.add('is-drawing');
     setTarget(18);
     rafId = requestAnimationFrame(tick);
 
@@ -153,12 +150,78 @@
     });
   }
 
-  /* 手写签名绘制控制 */
-  function drawMark(el) {
-    if (!el || reduceMotion.matches) { if (el) el.classList.add('is-drawn'); return; }
-    el.classList.remove('is-drawing', 'is-drawn');
-    void el.offsetWidth;
-    el.classList.add('is-drawing');
+  /* ====================================================================
+     手写签名 —— Vara.js + Pacifico 单线手写字体
+     加载屏 / 页眉 / 页脚三处签名由 vendor 里的 Vara 包按真实字形逐笔绘制。
+     字体数据内联为全局常量（vara-font.js），这里转成 Blob URL 喂给
+     Vara 的 XHR 加载器，file:// 双击打开同样可用。库缺失或加载失败时静默
+     退回容器里的静态兜底字样，不影响加载屏与页面其余部分。
+     ==================================================================== */
+  const MARKS = {};
+
+  function initMarks() {
+    if (typeof Vara !== 'function' || !window.VARA_FONT) return;
+
+    let fontUrl;
+    try {
+      fontUrl = URL.createObjectURL(
+        new Blob([JSON.stringify(window.VARA_FONT)], { type: 'application/json' }));
+    } catch (_) { return; }
+
+    const make = (name, id, opts) => {
+      const el = document.getElementById(id);
+      if (!el || !el.clientWidth) return;
+      el.textContent = '';                       // 移除静态兜底字样，交给 Vara 渲染
+      const inst = { el, duration: opts.duration, ready: false, pending: false, busy: 0 };
+      try {
+        inst.vara = new Vara('#' + id, fontUrl, [{ text: 'YunSee', id: 'sig' }], {
+          fontSize: Math.max(14, el.clientWidth / 7),   // 取小值防止 Vara 折行，最终大小由 viewBox 缩放决定
+          strokeWidth: 1.1,
+          color: '#000',                                // 占位色，实际由 CSS currentColor 接管
+          textAlign: 'left',
+          autoAnimation: opts.auto && !reduceMotion.matches,
+          duration: reduceMotion.matches ? 1 : opts.duration
+        });
+      } catch (_) { return; }
+      inst.vara.ready(() => {
+        fitMark(inst.el);
+        inst.ready = true;
+        if (inst.pending) { inst.pending = false; drawMark(name); }
+      });
+      MARKS[name] = inst;
+    };
+
+    make('boot', 'boot-mark', { auto: true,  duration: repeatVisit ? 1150 : 2050 });
+    make('head', 'head-mark', { auto: false, duration: 1050 });
+    make('foot', 'foot-mark', { auto: false, duration: 1900 });
+  }
+
+  /* Vara 生成的 SVG 是创建时定死的像素尺寸。给它补一个贴合字形包围盒的
+     viewBox 并交给 CSS 拉伸，让签名像原先的内联 SVG 一样随容器等比缩放。 */
+  function fitMark(el) {
+    const svg = el.querySelector('svg');
+    if (!svg) return;
+    try {
+      const bb = svg.getBBox();
+      const pad = bb.height * 0.08;
+      svg.setAttribute('viewBox',
+        [bb.x - pad, bb.y - pad, bb.width + pad * 2, bb.height + pad * 2]
+          .map(v => v.toFixed(2)).join(' '));
+      svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      el.style.setProperty('--mark-ratio', ((bb.width + pad * 2) / (bb.height + pad * 2)).toFixed(3));
+    } catch (_) { /* 容器不可见时 getBBox 会失败，保持 CSS 里的默认占位比例 */ }
+  }
+
+  /* 手写签名绘制控制（页眉：加载完成后首绘 + 悬停重绘；页脚：滚动入场） */
+  function drawMark(name) {
+    const inst = MARKS[name];
+    if (!inst) return;
+    if (!inst.ready) { inst.pending = true; return; }
+    if (reduceMotion.matches) { inst.vara.draw('sig', 1); return; }
+    const now = performance.now();
+    if (now < inst.busy) return;               // 上一遍还没画完，跳过这次重绘
+    inst.busy = now + inst.duration + 150;
+    inst.vara.draw('sig', inst.duration);
   }
 
   /* ======================================================================
@@ -768,13 +831,12 @@
     // 页脚签名滚动到视野内逐笔绘制
     const footMark = $('#foot-mark');
     const fio = new IntersectionObserver(entries => {
-      entries.forEach(en => { if (en.isIntersecting) { drawMark(footMark); fio.disconnect(); } });
+      entries.forEach(en => { if (en.isIntersecting) { drawMark('foot'); fio.disconnect(); } });
     }, { threshold: .35 });
     fio.observe(footMark);
 
     // 页眉签名：悬停重绘
-    const headMark = $('#head-mark');
-    $('.topbar-mark').addEventListener('mouseenter', () => drawMark(headMark));
+    $('.topbar-mark').addEventListener('mouseenter', () => drawMark('head'));
   }
 
   /* ======================================================================
@@ -794,6 +856,7 @@
   initTheme();
   initNav();
   initGridFill();
+  initMarks();
   initReveal();
   initCounters();
   initJoinForm();

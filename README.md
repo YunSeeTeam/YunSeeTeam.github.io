@@ -11,10 +11,13 @@
 
 ```
 YunSee-Site/
-├─ index.html                  页面结构（含三处手写签名 SVG）
+├─ index.html                  页面结构（含三处手写签名容器）
 ├─ assets/
 │  ├─ css/style.css            设计令牌 + 全部组件与动效
 │  ├─ images/                  合作伙伴 logo（文件名须为 ASCII）
+│  ├─ vendor/
+│  │  ├─ vara.min.js           Vara.js 手写动画库（自托管，MIT）
+│  │  └─ vara-font.js          Pacifico 单线手写字体数据（内联为 JS 全局）
 │  └─ js/
 │     ├─ data.js               ★ 站点全部内容都在这里，只改这个文件即可
 │     └─ main.js               加载屏、渲染、筛选、表单、主题、滚动
@@ -107,7 +110,7 @@ qqGroup:      '1145141919',
 
 | 动效 | 位置 | 实现 |
 | --- | --- | --- |
-| **手写笔画签名** | 加载屏 / 页眉 / 页脚 | 6 段 SVG 路径 `pathLength="1"` + `stroke-dashoffset` 逐笔绘制 |
+| **手写笔画签名** | 加载屏 / 页眉 / 页脚 | [Vara.js](https://github.com/akzhy/Vara) + Pacifico 单线手写字体逐字形绘制；字体数据内联成 JS 全局再转 Blob URL，`file://` 下同样可用；描边色由 CSS `currentColor` 接管以适配主题 |
 | 加载屏 | 首屏 | 左侧进度轨 + 跟随进度条的百分比读数 + 信号色幕布横向擦除 |
 | 标题入场 | 首屏 | `YUNSEE` 逐字符从裁切框内上滑 |
 | 滚动揭示 | 全站 | IntersectionObserver + 子元素 `--i` 阶梯延迟 |
@@ -126,7 +129,8 @@ qqGroup:      '1145141919',
 
 - **全站不使用任何渐变**。没有 `linear-gradient` / `radial-gradient` / `conic-gradient` /
   `repeating-*-gradient`。加载屏底纹用纯色 SVG 点阵 data-URI，骨架屏用纯色块位移代替微光扫描。
-- **零外部依赖**。不加载 Web Font、不引 CDN、不发 `fetch`，因此可直接用 `file://` 打开，
+- **零网络依赖**。不加载 Web Font、不引 CDN、不发网络请求；手写签名用的 Vara.js 与
+  Pacifico 字体数据都自托管在 `assets/vendor/`，因此可直接用 `file://` 打开，
   也可以扔进任意静态托管（GitHub Pages / Vercel / Cloudflare Pages）。
 - **深浅双主题，默认夜间**。首次访问一律夜间（不跟随 `prefers-color-scheme`，否则浅色系统会把
   默认拉回白天）；用户手动切换后写入 `localStorage` 并长期沿用。主题在 `<head>` 内联脚本里

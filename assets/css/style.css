@@ -174,38 +174,41 @@ img, svg { display: block; }
 .btn--solid:hover { color: #000; box-shadow: none; }
 
 /* --------------------------------------------------------------------------
-   03. 手写签名笔画动画（Y-u-n-S-e-e 六段笔画）
+   03. 手写签名（Vara.js + Pacifico 手写字体，逐笔绘制）
    -------------------------------------------------------------------------- */
 .mark {
-  --k: 1;                       /* 时间缩放系数 */
-  width: 100%; height: auto;
-  overflow: visible;
+  position: relative;
+  display: block;
+  width: 100%;
   color: currentColor;
+  container-type: inline-size;      /* 供兜底字样按容器宽度取字号 */
+  /* 先按签名近似比例占位（Pacifico "YunSee" 实测约 2.5），
+     Vara 渲染完成后由 JS 写入精确比例，避免布局跳动 */
+  aspect-ratio: var(--mark-ratio, 2.5);
 }
-/* 笔画随 SVG 等比缩放，页眉小标与页脚大标共用同一组路径数据 */
-.mark path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
+/* Vara 生成的 SVG 是固定像素尺寸，main.js 渲染完成后补 viewBox，
+   这里把它拉伸到容器，签名随容器等比缩放（页眉小标 / 页脚大标共用字形） */
+.mark svg {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible;
 }
-.mark g path:nth-child(1) { --t: 0s;    --d: .64s; }
-.mark g path:nth-child(2) { --t: .50s;  --d: .26s; }
-.mark g path:nth-child(3) { --t: .70s;  --d: .28s; }
-.mark g path:nth-child(4) { --t: .96s;  --d: .52s; }
-.mark g path:nth-child(5) { --t: 1.38s; --d: .26s; }
-.mark g path:nth-child(6) { --t: 1.58s; --d: .30s; }
+/* Vara 以属性写死描边色，用 CSS 覆盖成 currentColor：
+   加载屏 / 页脚跟信号色，页眉跟墨色，主题切换零成本 */
+.mark svg path { stroke: currentColor; }
 
-.mark.is-drawing path {
-  animation-name: strokeDraw;
-  animation-fill-mode: forwards;
-  animation-timing-function: var(--ease-io);
-  animation-duration: calc(var(--d) * var(--k));
-  animation-delay: calc(var(--t) * var(--k));
+/* 脚本不可用（noscript / 字库加载失败）时的静态兜底字样 */
+.mark-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  font: italic 400 26cqw/1 "Segoe Script", "Brush Script MT", "Snell Roundhand", cursive;
+  letter-spacing: .01em;
+  white-space: nowrap;
 }
-.mark.is-drawn path { stroke-dashoffset: 0; }
-
-@keyframes strokeDraw { to { stroke-dashoffset: 0; } }
-
-.mark--fast { --k: .55; }
 
 /* --------------------------------------------------------------------------
    04. 加载屏 Boot
@@ -1741,7 +1744,6 @@ html.theme-fallback body { animation: themeFade .4s var(--ease); }
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
-  .mark path { stroke-dashoffset: 0 !important; }
   .ticker-track { animation: none !important; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
 }
