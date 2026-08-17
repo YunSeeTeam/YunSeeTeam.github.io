@@ -171,6 +171,17 @@ const CORE_MEMBERS = [
     bio:    '擅长逻辑类以及注入类漏洞的挖掘。',
     skills: [['web渗透', 99], ['代码审计', 95], ['应急响应', 66]],
     links:  { github: '#', blog: '#' }
+  },
+  {
+    // ★ 由俱乐部晋升。简介与技能三项待本人提供后补全，
+    //    skills 留空数组时卡片不渲染技能条，不影响排版
+    handle: '懒羊羊大王',
+    name:   '成员 / Member',
+    field:  'WEB',
+    since:  2026,
+    bio:    '由 YunSee 俱乐部晋升的 Web 方向成员。',
+    skills: [],
+    links:  { github: '#', blog: '#' }
   }
 ];
 
@@ -184,7 +195,6 @@ const CLUB_MEMBERS = [
   { handle: '世茶之火',   field: ['RE', 'PWN'], since: 2025, status: '在役' },
   { handle: 'dnw',        field: 'WEB',         since: 2025, status: '训练营' },
   { handle: 'jake',       field: 'WEB',         since: 2026, status: '训练营' },
-  { handle: '懒羊羊大王', field: 'WEB',         since: 2026, status: '在役' },
   { handle: '小猫咪',     field: 'CRYPTO',      since: 2026, status: '训练营' },
   { handle: 'Xray Wire Link',     field: 'WEB',      since: 2026, status: '训练营' },
   { handle: 'Odlteyl',    field: 'WEB',         since: 2026, status: '训练营' },
@@ -266,12 +276,12 @@ const PARTNERS = [
     url:   ''                       // ★ 待补：好靶场官网地址
   },
   {
-    name:  '终渊二进制安全实验室',
-    en:    'BINARY SECURITY LAB',
-    logo:  'assets/images/zhongyuan-lab.jpg',
-    desc:  '专注二进制安全的研究团队，覆盖逆向工程、漏洞挖掘与利用技术研究。',
-    tags:  ['二进制', '漏洞研究'],
-    url:   ''                       // ★ 待补：终渊实验室官网 / 主页地址
+    name:  '鲲鹏安全研究院',
+    en:    'KUNPENG SECURITY RESEARCH',
+    logo:  'assets/images/kunpeng.png',
+    desc:  '安全研究机构，专注漏洞研究与攻防技术共建，与战队保持长期技术交流。',
+    tags:  ['安全研究', '攻防技术'],
+    url:   ''                       // ★ 待补：鲲鹏安全研究院官网地址
   },
   {
     name:  '鱼影安全',

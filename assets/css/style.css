@@ -858,7 +858,22 @@ html[data-theme="dark"] .content-stack { box-shadow: 0 18px 50px rgba(0, 0, 0, .
 .core-card--open .core-handle { color: var(--muted); }
 .core-card--open:hover .core-handle { color: #000; }
 .core-card--open .core-avatar { font-size: 26px; font-weight: 700; }
-.core-card--open .core-skills { min-height: 0; }
+.core-card--open .core-links { margin-top: auto; padding-top: 18px; }
+
+/* 跨多列时切成横幅：头像 / 文案 / 按钮一行排开，内容不会在超宽卡里散架 */
+.core-card--open.is-wide {
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(20px, 3vw, 46px);
+  min-height: 0;
+  padding: 26px 26px;
+}
+.core-card--open.is-wide .core-top { flex: 0 0 auto; }
+.core-card--open.is-wide .core-index { display: none; }
+.core-card--open.is-wide .core-open-main { flex: 1 1 auto; min-width: 0; }
+.core-card--open.is-wide .core-handle { margin-top: 0; }
+.core-card--open.is-wide .core-bio { max-width: 62ch; }
+.core-card--open.is-wide .core-links { margin-top: 0; padding-top: 0; flex: 0 0 auto; }
 .core-open-cta {
   display: inline-flex;
   align-items: center;
