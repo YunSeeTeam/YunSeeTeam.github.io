@@ -173,15 +173,16 @@ const CORE_MEMBERS = [
     links:  { github: '#', blog: '#' }
   },
   {
-    // ★ 由俱乐部晋升。简介与技能三项待本人提供后补全，
-    //    skills 留空数组时卡片不渲染技能条，不影响排版
     handle: '懒羊羊大王',
     name:   '成员 / Member',
-    field:  'WEB',
+    field:  'PWN',
     since:  2026,
-    bio:    '由 YunSee 俱乐部晋升的 Web 方向成员。',
-    skills: [],
-    links:  { github: '#', blog: '#' }
+    bio:    'Pwn、二进制、提示词优化。',
+    skills: [['pwn', 60], ['二进制', 50], ['提示词优化', 60]],
+    links:  {
+      github: 'https://github.com/yangleduo0629-cloud',
+      blog:   'https://yangleduo0629-cloud.github.io/-/#/'
+    }
   }
 ];
 
