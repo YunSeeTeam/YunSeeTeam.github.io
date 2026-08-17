@@ -319,20 +319,8 @@
           ${links ? `<div class="core-links">${links}</div>` : ''}
         </article>`;
     }).join('')
-    // 末位固定一张招新卡，由 layoutCoreGrid 撑满末行剩余格子（详见该函数注释）
-    + `
-        <a class="core-card core-card--open" style="--i:${CORE_MEMBERS.length}" href="#join">
-          <div class="core-top">
-            <div class="core-avatar" aria-hidden="true">+</div>
-            <span class="core-index">OPEN / 招新中</span>
-          </div>
-          <div class="core-open-main">
-            <h3 class="core-handle">虚位以待</h3>
-            <p class="core-role">RECRUITING · 常年招新</p>
-            <p class="core-bio">不限学校与年级，各方向均在招。填写邮箱投递即可开始。</p>
-          </div>
-          <div class="core-links"><span class="core-open-cta">加入战队 ↗</span></div>
-        </a>`;
+    ;
+    // 招新占位卡不在这里生成 —— 数量取决于当前列数，交给 syncCorePlaceholders
   }
 
   /* 网格补位：卡片数不是列数整倍数时，末行会露出网格底色（--line）像块空灰格。
@@ -351,28 +339,40 @@
     }
   }
 
-  /* 核心成员网格不用透明补位，改让招新卡横跨末行剩余格子：
-     成员数正好排满时（N % cols === 0）招新卡独占一整行，跨满 cols 格；
-     否则跨掉末行剩下的 cols - N % cols 格。两种情况都不会留下空位，
-     也不会出现「一张虚线卡 + 两个空格」那种没做完的观感。
-     跨度 > 1 时切成横幅版式（is-wide），避免内容在超宽卡里散开。 */
-  function layoutCoreGrid() {
+  const OPEN_CARD_HTML = `
+        <a class="core-card core-card--open" href="#join">
+          <div class="core-top">
+            <div class="core-avatar" aria-hidden="true">+</div>
+            <span class="core-index">OPEN / 招新中</span>
+          </div>
+          <div class="core-open-main">
+            <h3 class="core-handle">虚位以待</h3>
+            <p class="core-role">RECRUITING · 常年招新</p>
+            <p class="core-bio">不限学校与年级，各方向均在招。填写邮箱投递即可开始。</p>
+          </div>
+          <div class="core-links"><span class="core-open-cta">加入战队 ↗</span></div>
+        </a>`;
+
+  /* 招新占位卡只用来把末行补齐成整行，不是常驻卡片：
+       末行已满（N % cols === 0）→ 一张都不放
+       末行剩 1 张 → 补 2 张   末行剩 2 张 → 补 1 张
+     列数随断点变化，所以每次 resize 都按当前列数重算数量。 */
+  function syncCorePlaceholders() {
     const grid = $('#core-grid');
-    const open = grid && grid.querySelector('.core-card--open');
-    if (!open) return;
-    [...grid.querySelectorAll('.grid-filler')].forEach(el => el.remove());
-    // 必须先复位跨度再量列数：残留的 span 会让网格生成隐式列，
-    // 读到的列数比 CSS 定义的多，跨度就再也纠正不回来了
-    open.style.gridColumn = '';
+    if (!grid) return;
+    [...grid.querySelectorAll('.core-card--open, .grid-filler')].forEach(el => el.remove());
     const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
-    const span = cols > 1 ? cols - (CORE_MEMBERS.length % cols) : 1;
-    open.style.gridColumn = span > 1 ? `span ${span}` : '';
-    open.classList.toggle('is-wide', span > 1);
+    if (cols < 2) return;                       // 单列时每行天然是满的
+    const need = (cols - (CORE_MEMBERS.length % cols)) % cols;
+    for (let i = 0; i < need; i++) grid.insertAdjacentHTML('beforeend', OPEN_CARD_HTML);
+    // 补上入场动画的阶梯序号，接在成员卡后面
+    $$('.core-card--open', grid).forEach((el, i) =>
+      el.style.setProperty('--i', CORE_MEMBERS.length + i));
   }
 
   function initGridFill() {
     const run = () => {
-      layoutCoreGrid();
+      syncCorePlaceholders();
       fillGrid($('#proj-grid'));
       fillGrid($('#partner-grid'));
     };
