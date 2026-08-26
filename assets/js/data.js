@@ -36,7 +36,8 @@ const FIELDS = [
   { key: 'OSINT',  label: '开源情报' },
   { key: 'IR',     label: '应急响应' },
   { key: 'DEV',    label: '软件开发' },
-  { key: 'BC',     label: '区块链' }
+  { key: 'BC',     label: '区块链' },
+  { key: 'INT/AD',     label: '内网渗透' }
 ];
 
 /* --------------------------------------------------------------------------
@@ -194,6 +195,7 @@ const CORE_MEMBERS = [
    -------------------------------------------------------------------------- */
 const CLUB_MEMBERS = [
   { handle: '世茶之火',   field: ['RE', 'PWN'], since: 2025, status: '在役' },
+  { handle: 'Myisme',   field: ['WEB', 'INT/AD'], since: 2025, status: '在役' },
   { handle: 'dnw',        field: 'WEB',         since: 2025, status: '训练营' },
   { handle: 'jake',       field: 'WEB',         since: 2026, status: '训练营' },
   { handle: '小猫咪',     field: 'CRYPTO',      since: 2026, status: '训练营' },
@@ -201,7 +203,8 @@ const CLUB_MEMBERS = [
   { handle: 'Odlteyl',    field: 'WEB',         since: 2026, status: '训练营' },
   { handle: '晨肖',       field: 'RE',          since: 2026, status: '训练营' },
   { handle: '崔叔233',    field: 'IOT',         since: 2026, status: '训练营' },
-  { handle: 'KelosPu',    field: 'OSINT',       since: 2026, status: '训练营' }
+  { handle: 'KelosPu',    field: 'OSINT',       since: 2026, status: '训练营' },
+  { handle: 'cvA.', field: 'WEB',      since: 2026, status: '训练营' }
 ];
 
 /* --------------------------------------------------------------------------
