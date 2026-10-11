@@ -328,3 +328,30 @@ const JOIN_NOTES = [
   { t: '愿意分享',     d: '赛后按队内规范输出 Writeup，参与知识库与开源项目维护。' },
   { t: '不设门槛限制', d: '不限学校与年级，训练营面向零基础但有强烈兴趣的同学开放。' }
 ];
+
+/* --------------------------------------------------------------------------
+   10. 文库（library.html）—— 公开文献，站内在线阅读
+   新增一篇：
+     1) PDF 放进 assets/library/，文件名须为 ASCII；导出时请嵌入字体
+     2) 仓库根目录运行 python tools/pack-pdf.py，生成同名 .pdf.js
+        （阅读器只读 .pdf.js，不直接请求 .pdf，避免 IDM 等下载工具一进页面就弹下载）
+     3) 在下面加一条
+   目录按 date 倒序自动排列，最新一篇为文库页默认打开的文献。
+   id 用于分享链接：library.html?doc=<id>
+   pages / size 只用于目录展示，阅读器以 PDF 实际页数为准。
+   -------------------------------------------------------------------------- */
+const LIBRARY = [
+  {
+    id:       'ysp-1.0',
+    code:     'YSP-1.0',
+    title:    'Yunsee Stream Protocol 1.0',
+    subtitle: '数据报传输与分层对象封装规范',
+    type:     '协议规范',
+    status:   '稳定',
+    date:     '2026-10-08',
+    pages:    7,
+    size:     '221 KB',
+    tags:     ['UDP', 'HMAC-SHA256', 'XTEA-CBC', 'RC4'],
+    file:     'assets/library/YSP-1.0_protocol_specification.pdf'
+  }
+];

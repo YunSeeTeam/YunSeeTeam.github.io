@@ -1,0 +1,509 @@
+/* ==========================================================================
+   YunSee 文库 — 文库页专属样式（library.html）
+   设计令牌、页眉、章节骨架、按钮等全部沿用 style.css，这里只补文库独有的组件。
+   约束与主站一致：不使用任何 gradient，纹理用纯色 SVG 点阵。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   01. 首屏：沿用首页 hero 结构，标题略收小，让阅读器更快进入视野
+   -------------------------------------------------------------------------- */
+.hero--lib .wordmark { font-size: clamp(48px, 9.6vw, 152px); }
+
+/* --------------------------------------------------------------------------
+   02. 文献目录
+   行式列表，交互与奖项行一致：信号色从左推入、文字整体反色。
+   整行由标题链接的 ::after 撑满可点，下载按钮单独浮在其上。
+   -------------------------------------------------------------------------- */
+.docs { margin: 0; padding: 0; list-style: none; }
+.doc {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  /* 每行是独立网格，元信息与操作两列用定宽，多行之间才能上下对齐
+     （「阅读中」标记只出现在当前行，用 auto 会把这一行的元信息挤歪） */
+  grid-template-columns: 136px minmax(0, 1fr) 96px 140px;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 22px;
+  border-bottom: 1px solid var(--line);
+  transition: color .3s var(--ease);
+}
+.doc:last-child { border-bottom: 0; }
+.doc::before {
+  content: "";
+  position: absolute; inset: 0;
+  z-index: -1;
+  background: var(--signal);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .5s var(--ease);
+}
+.doc:hover { color: #000; }
+.doc:hover::before { transform: scaleX(1); }
+/* 当前在阅读器里打开的文献：左缘常驻 4px 信号色条 */
+.doc.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--signal);
+}
+
+.doc-code b {
+  display: block;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -.05em;
+  white-space: nowrap;
+}
+.doc-code span {
+  display: block;
+  margin-top: 10px;
+  font: 10px/1.4 var(--mono);
+  color: var(--muted);
+  letter-spacing: .1em;
+}
+.doc:hover .doc-code span { color: rgba(0, 0, 0, .62); }
+
+.doc-main { min-width: 0; }
+.doc-main h3 { margin: 0; font-size: 17px; font-weight: 800; line-height: 1.3; letter-spacing: -.025em; }
+.doc-main p { margin: 6px 0 0; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.doc:hover .doc-main p { color: rgba(0, 0, 0, .7); }
+.doc-open::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.doc-open:focus-visible { outline: 0; }
+.doc-open:focus-visible::after { outline: 2px solid var(--signal); outline-offset: -2px; }
+
+.doc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.doc:hover .tag { background: rgba(0, 0, 0, .1); }
+.doc:hover .tag--signal { color: var(--signal); background: #000; }
+
+.doc-meta {
+  display: grid;
+  justify-items: end;
+  gap: 7px;
+  font: 10px/1 var(--mono);
+  color: var(--muted);
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.doc-meta b { color: var(--ink); font-weight: 700; }
+.doc:hover .doc-meta { color: rgba(0, 0, 0, .62); }
+.doc:hover .doc-meta b { color: #000; }
+
+.doc-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.doc-now { display: none; }
+.doc.is-current .doc-now { display: inline-block; }
+.doc:hover .tag--ink { color: var(--signal); background: #000; }
+.doc-arrow,
+.doc-dl {
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 13px;
+  transition: transform .38s var(--ease), background-color .3s, color .3s, box-shadow .3s;
+}
+.doc-dl { position: relative; z-index: 2; }       /* 浮在整行链接之上，单独可点 */
+.doc:hover .doc-arrow {
+  color: var(--signal);
+  background: #000;
+  box-shadow: inset 0 0 0 1px #000;
+  transform: translateX(3px);
+}
+.doc:hover .doc-dl { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .3); }
+.doc-dl:hover { color: var(--signal); background: #000; box-shadow: inset 0 0 0 1px #000 !important; }
+
+/* 目录底部的勘误 / 转载说明，沿用友链区的说明行样式 */
+.docs-note { border-top: 1px solid var(--line); }
+
+/* --------------------------------------------------------------------------
+   03. 阅读区左栏的文献信息表
+   -------------------------------------------------------------------------- */
+.doc-spec { margin: 26px 0 0; border-top: 1px solid var(--line); }
+.doc-spec > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.doc-spec dt { font: 10px/1.4 var(--mono); color: var(--muted); letter-spacing: .12em; }
+.doc-spec dd { margin: 0; font: 700 11px/1.4 var(--mono); letter-spacing: .04em; text-align: right; }
+.doc-spec-dl { width: 100%; height: 40px; margin-top: 16px; justify-content: space-between; }
+
+/* --------------------------------------------------------------------------
+   04. 阅读器骨架：工具栏 / 阅读进度 / 页面舞台
+   高度按视口取，跳到 #reader 时整个阅读器正好占满一屏
+   -------------------------------------------------------------------------- */
+.rd {
+  display: flex;
+  flex-direction: column;
+  height: clamp(540px, calc(100vh - 96px), 1180px);
+  background: var(--panel);
+}
+@supports (height: 100dvh) {
+  .rd { height: clamp(540px, calc(100dvh - 96px), 1180px); }
+}
+
+.rd-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  padding: 12px 16px 12px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.rd-doc { display: flex; align-items: center; gap: 12px; flex: 1 1 200px; min-width: 0; }
+.rd-doc b {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.rd-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+
+/* 按钮组：沿用名册筛选器的 1px 线框分段样式 */
+.rd-group { display: flex; align-items: stretch; height: 32px; box-shadow: inset 0 0 0 1px var(--line); }
+.rd-group > * + * { box-shadow: inset 1px 0 0 var(--line); }
+.rd-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 32px;
+  padding: 0 9px;
+  color: var(--muted);
+  font: 13px/1 var(--mono);
+  white-space: nowrap;
+  transition: color .25s, background-color .25s;
+}
+.rd-btn[hidden] { display: none; }
+.rd-btn:hover:not(:disabled) { color: var(--ink); background: var(--soft); }
+.rd-btn:disabled { opacity: .32; cursor: default; }
+.rd-btn[aria-pressed="true"],
+.rd-btn[aria-pressed="true"]:hover { color: #000; background: var(--signal); }
+.rd-btn--text { font-size: 11px; letter-spacing: .06em; padding: 0 12px; }
+.rd-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.rd-ico-exit { display: none; }
+.rd.is-full .rd-ico-enter { display: none; }
+.rd.is-full .rd-ico-exit { display: inline; }
+
+.rd-pageno {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  color: var(--muted);
+  font: 11px/1 var(--mono);
+  cursor: text;
+  transition: background-color .25s;
+}
+.rd-pageno input {
+  width: 3ch;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 700 12px/1 var(--mono);
+  text-align: right;
+}
+.rd-pageno input:focus { outline: 0; }
+.rd-pageno input:disabled { color: var(--muted); }
+.rd-pageno:focus-within { background: var(--soft); box-shadow: inset 1px 0 0 var(--line), inset 0 -2px 0 var(--signal); }
+
+.rd-scale {
+  display: grid;
+  place-items: center;
+  min-width: 56px;
+  font: 700 11px/1 var(--mono);
+  letter-spacing: .04em;
+}
+
+/* 阅读进度：4px 信号色条随滚动推进（同名册表头的 4px 信号线） */
+.rd-progress { height: 4px; background: var(--soft); }
+.rd-progress span {
+  display: block;
+  height: 100%;
+  background: var(--signal);
+  transform: scaleX(var(--p, 0));
+  transform-origin: left center;
+  transition: transform .18s linear;
+}
+
+.rd-body { position: relative; flex: 1; min-height: 0; }
+.rd-stage {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) transparent;
+  background-color: var(--soft);
+  background-attachment: local;                /* 点阵随页面一起滚动 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Crect width='1' height='1' fill='%23101110' fill-opacity='0.16'/%3E%3C/svg%3E");
+}
+html[data-theme="dark"] .rd-stage {
+  background-color: #0c0d0c;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Crect width='1' height='1' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E");
+}
+.rd-stage:focus { outline: 0; }
+.rd-stage:focus-visible { outline: 2px solid var(--signal); outline-offset: -2px; }
+
+/* --------------------------------------------------------------------------
+   05. 页面
+   页面纸张在两种主题下都保持白底，忠实还原 PDF 本身的排版。
+   -------------------------------------------------------------------------- */
+.rd-pages {
+  position: relative;                          /* 页面坐标的基准，供翻页与缩放锚点计算 */
+  width: max-content;
+  min-width: 100%;
+  padding: 26px 28px 40px;
+}
+.rd-sheet {
+  width: max-content;
+  margin: 0 auto 26px;
+  opacity: 0;
+  transition: opacity .6s var(--ease);
+  transition-delay: calc(min(var(--i, 0), 6) * 70ms);
+}
+.rd-sheet:last-child { margin-bottom: 0; }
+.rd.is-ready .rd-sheet { opacity: 1; }
+
+.rd-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+  color: var(--muted);
+  font: 10px/1 var(--mono);
+  letter-spacing: .1em;
+}
+.rd-label b {
+  margin-right: 4px;
+  padding: 3px 5px;
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--line);
+  transition: color .25s, background-color .25s, box-shadow .25s;
+}
+.rd-sheet.is-current .rd-label b { color: #000; background: var(--signal); box-shadow: none; }
+
+.rd-page {
+  /* PDF.js 文本层按这几个变量排版（--scale-factor 由脚本按缩放写入） */
+  --user-unit: 1;
+  --total-scale-factor: calc(var(--scale-factor, 1) * var(--user-unit));
+  --scale-round-x: 1px;
+  --scale-round-y: 1px;
+
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--line), 0 16px 44px rgba(16, 17, 16, .08);
+}
+html[data-theme="dark"] .rd-page { box-shadow: 0 0 0 1px rgba(255, 255, 255, .06), 0 18px 50px rgba(0, 0, 0, .55); }
+/* 画布到位前的占位字样（纸张恒为白底，所以用固定灰而不是主题色） */
+.rd-page::before {
+  content: "RENDERING";
+  content: "RENDERING" / "";                 /* 读屏软件跳过这段装饰字 */
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #b8bab5;
+  font: 10px/1 var(--mono);
+  letter-spacing: .24em;
+}
+.rd-canvas canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   06. PDF.js 文本层（摘自 pdfjs-dist 6.4 的 pdf_viewer.css，展开了 CSS 嵌套）
+   文字本身透明，只负责选中、复制与 Ctrl+F；选区用半透明信号色。
+   -------------------------------------------------------------------------- */
+.rd .textLayer {
+  color-scheme: only light;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  overflow: clip;
+  text-align: initial;
+  opacity: 1;
+  line-height: 1;
+  letter-spacing: normal;
+  word-spacing: normal;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  caret-color: CanvasText;
+
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+}
+.rd .textLayer span,
+.rd .textLayer br {
+  position: absolute;
+  color: transparent;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+  -webkit-user-select: text;
+  user-select: text;
+}
+.rd .textLayer > :not(.markedContent),
+.rd .textLayer .markedContent span:not(.markedContent) {
+  z-index: 1;
+  --font-height: 0;
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+  --scale-x: 1;
+  --rotate: 0deg;
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+}
+.rd .textLayer .markedContent { display: contents; }
+/* 带 /Rotate 的页面：文本层按未旋转的尺寸排版，再整体转到位（同官方查看器） */
+.rd .textLayer[data-main-rotation="90"]  { transform: rotate(90deg) translateY(-100%); }
+.rd .textLayer[data-main-rotation="180"] { transform: rotate(180deg) translate(-100%, -100%); }
+.rd .textLayer[data-main-rotation="270"] { transform: rotate(270deg) translateX(-100%); }
+.rd .textLayer span[role="img"] { -webkit-user-select: none; user-select: none; cursor: default; }
+.rd .textLayer ::selection { color: transparent; background: rgba(214, 240, 0, .5); }
+.rd .textLayer br::selection { background: transparent; }
+.rd .textLayer .endOfContent {
+  position: absolute;
+  inset: 100% 0 0;
+  z-index: 0;
+  display: block;
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.rd .textLayer.selecting .endOfContent { top: 0; }
+
+/* --------------------------------------------------------------------------
+   07. 状态层：载入进度 / 出错
+   -------------------------------------------------------------------------- */
+.rd-status {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: var(--panel);
+  transition: opacity .45s var(--ease), visibility 0s .45s;
+}
+.rd-status.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.rd-loading { display: grid; justify-items: start; gap: 12px; width: min(320px, 100%); }
+.rd-pct {
+  font-size: clamp(44px, 5vw, 66px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -.06em;
+  font-variant-numeric: tabular-nums;
+}
+.rd-track { position: relative; display: block; width: 100%; height: 4px; overflow: hidden; background: var(--soft); }
+.rd-pct small { margin-left: .12em; color: var(--muted); font-size: .36em; letter-spacing: 0; }
+.rd-track span {
+  display: block;
+  height: 100%;
+  background: var(--signal);
+  transform: scaleX(var(--p, 0));
+  transform-origin: left center;
+  transition: transform .45s var(--ease);
+}
+
+.rd-error { display: grid; justify-items: start; gap: 14px; max-width: 440px; }
+.rd-error h3 { margin: 0; font-size: clamp(20px, 2vw, 26px); letter-spacing: -.045em; }
+.rd-error p { margin: 0; font-size: 13px; line-height: 1.72; color: var(--muted); }
+.rd-error .tag { color: #fff; background: var(--alert); }
+.rd-error-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+
+/* --------------------------------------------------------------------------
+   08. 退回浏览器内置阅读器（file:// 本地预览等）
+   -------------------------------------------------------------------------- */
+.rd-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--soft);
+  color: var(--muted);
+  font: 10px/1.6 var(--mono);
+  letter-spacing: .04em;
+}
+.rd-note[hidden] { display: none; }
+.rd-note .tag { color: #000; background: var(--signal); }
+.rd-note p { flex: 1 1 260px; margin: 0; }
+.rd-note a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.rd-note a:hover { color: var(--ink); background: var(--signal); }
+.rd.is-native .rd-group--nav,
+.rd.is-native .rd-group--zoom,
+.rd.is-native .rd-group--fit,
+.rd.is-native .rd-progress,
+.rd.is-native .rd-pages { display: none; }
+.rd.is-native .rd-stage { overflow: hidden; }
+.rd-native { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+
+/* --------------------------------------------------------------------------
+   09. 全屏阅读
+   -------------------------------------------------------------------------- */
+.rd:fullscreen { width: 100%; height: 100%; }
+.rd.is-full .rd-bar { padding-left: 24px; padding-right: 24px; }
+
+/* --------------------------------------------------------------------------
+   10. 响应式
+   -------------------------------------------------------------------------- */
+@media (max-width: 1240px) {
+  .doc { grid-template-columns: 116px minmax(0, 1fr) 96px; }
+  .doc-meta { grid-column: 3; grid-row: 1; }
+  .doc-actions { grid-column: 2 / -1; justify-content: flex-start; }
+  .doc-actions .doc-now { order: 3; }
+}
+
+@media (max-width: 860px) {
+  .doc-spec, .doc-spec-dl { display: none; }
+  .doc { grid-template-columns: 96px minmax(0, 1fr); row-gap: 16px; }
+  .doc-meta {
+    grid-column: 2; grid-row: auto;
+    display: flex; flex-wrap: wrap; gap: 6px 16px;
+    justify-items: start;
+  }
+  .doc-actions { grid-column: 2; }
+}
+
+@media (max-width: 560px) {
+  .hero--lib .wordmark { font-size: clamp(40px, 12.6vw, 60px); }
+
+  .doc { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 20px 16px; }
+  .doc-code { display: flex; align-items: baseline; gap: 12px; }
+  .doc-code b { font-size: 21px; }
+  .doc-code span { margin-top: 0; }
+  .doc-meta, .doc-actions { grid-column: 1; }
+
+  /* 手机上阅读器去掉右侧装饰栏，把宽度全部留给页面 */
+  .section--reader .section-rail { display: none; }
+  .section--reader .content-stack { grid-column: 1 / -1; }
+
+  .rd-bar { gap: 10px; padding: 10px 12px; }
+  .rd-tools { gap: 6px; }
+  .rd-scale, .rd-group--fit, .rd-btn-label { display: none; }
+  .rd-pages { padding: 16px 12px 24px; }
+  .rd-sheet { margin-bottom: 18px; }
+  .rd-note { padding: 10px 12px; }
+}

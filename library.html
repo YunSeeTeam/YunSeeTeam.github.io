@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="YunSee 文库 — 战队对外公开的协议规范、技术报告与研究文献，支持站内在线阅读。">
+  <meta name="theme-color" content="#0e0f0e">
+  <title>YunSee // LIBRARY</title>
+
+  <link rel="icon" href="assets/ico/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/ico/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/ico/favicon-16.png">
+  <link rel="apple-touch-icon" href="assets/ico/apple-touch-icon.png">
+
+  <!-- 主题与首页共用同一份 localStorage 记录，两页之间切换不闪烁 -->
+  <script>
+    (() => {
+      let theme = 'dark', source = 'default';
+      try {
+        const saved = localStorage.getItem('yunsee-theme');
+        if (saved === 'light' || saved === 'dark') { theme = saved; source = 'manual'; }
+      } catch (_) { /* 隐私模式下 localStorage 不可用，回落到夜间默认 */ }
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.themeSource = source;
+    })();
+  </script>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/library.css">
+  <noscript><style>.reveal,[data-stagger]>*{opacity:1!important;transform:none!important}.wm-char{transform:none!important}</style></noscript>
+</head>
+<body data-page="library">
+
+<!-- ==========================================================================
+     页眉（与首页一致，导航指回首页各章节）
+     ========================================================================== -->
+<header class="topbar" id="topbar">
+  <a class="topbar-mark" href="index.html" aria-label="YunSee 返回首页">
+    <div class="mark" id="head-mark" role="img" aria-label="YunSee"><span class="mark-fallback">YunSee</span></div>
+    <span class="topbar-sub" id="topbar-sub">CTF TEAM</span>
+  </a>
+
+  <nav class="topnav" id="topnav" aria-label="主导航">
+    <a href="index.html#core"><i>01</i>核心成员</a>
+    <a href="index.html#club"><i>02</i>俱乐部成员</a>
+    <a href="index.html#awards"><i>03</i>战队奖项</a>
+    <a href="index.html#projects"><i>04</i>开源项目</a>
+    <a href="index.html#partners"><i>05</i>合作伙伴</a>
+    <a href="index.html#friends"><i>06</i>友链</a>
+    <a href="index.html#join"><i>07</i>加入我们</a>
+  </nav>
+
+  <div class="topbar-tools">
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="切换颜色主题">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    </button>
+    <a class="btn btn--lib" href="library.html" aria-current="page" title="YunSee 文库 · 公开文献在线阅读">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8.5L19 7.5V21H6zM14 3v5h5M9 12.5h7M9 16.5h5"/></svg>
+      <span>文库</span>
+    </a>
+    <a class="btn btn--solid" href="index.html#join"><span>加入战队</span></a>
+    <button class="burger" id="burger" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menu"><span></span></button>
+  </div>
+</header>
+
+<!-- 移动端全屏菜单 -->
+<nav class="menu" id="menu" aria-label="移动端导航">
+  <a href="index.html#core"     style="--i:0"><i>01</i>核心成员</a>
+  <a href="index.html#club"     style="--i:1"><i>02</i>俱乐部成员</a>
+  <a href="index.html#awards"   style="--i:2"><i>03</i>战队奖项</a>
+  <a href="index.html#projects" style="--i:3"><i>04</i>开源项目</a>
+  <a href="index.html#partners" style="--i:4"><i>05</i>合作伙伴</a>
+  <a href="index.html#friends"  style="--i:5"><i>06</i>友链</a>
+  <a href="index.html#join"     style="--i:6"><i>07</i>加入我们</a>
+  <a href="library.html"        style="--i:7" aria-current="page"><i>LIB</i>文库</a>
+</nav>
+
+<main>
+  <!-- ========================================================================
+       首屏
+       ======================================================================== -->
+  <section class="hero hero--lib" id="top">
+    <div class="hero-block" aria-hidden="true">OPEN
+DOCS</div>
+
+    <div class="hero-meta">
+      <p class="eyebrow"><strong>YunSee Library</strong><br>协议规范 / 技术报告 / 研究文献</p>
+      <span class="state"><i></i><span>READER ONLINE</span></span>
+    </div>
+
+    <h1 class="wordmark"><span class="slashes"></span><span id="wordmark-text">LIBRARY</span></h1>
+
+    <div class="hero-caption">
+      <p>YunSee 文库收录战队对外公开的协议规范、技术报告与研究文献。所有文献均可在站内直接阅读，无需下载；需要离线保存时也可一键下载原始 PDF。</p>
+      <div class="signal-squares" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat"><span>Documents</span><b data-count-key="docs">—</b><em>公开文献</em></div>
+      <div class="hero-stat"><span>Pages</span><b data-count-key="docPages">—</b><em>累计页数</em></div>
+      <div class="hero-stat"><span>Latest</span><b id="lib-latest">—</b><em>最近发布</em></div>
+      <div class="hero-stat"><span>Format</span><b>PDF</b><em>站内阅读 / 可下载</em></div>
+    </div>
+  </section>
+
+  <div class="workspace">
+
+    <!-- ======================================================================
+         01 文献目录
+         ====================================================================== -->
+    <section class="section reveal" id="index">
+      <div class="section-grid">
+        <div class="section-intro">
+          <div>
+            <span class="section-number">01 / INDEX</span>
+            <h2 class="section-title"><small>DOCUMENT INDEX</small>文献目录</h2>
+          </div>
+          <p class="section-copy">战队对外公开的全部文献，按发布日期倒序排列。点击条目即在下方阅读器中打开。</p>
+          <div class="micro-code" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="content-stack">
+          <div class="roster-head">
+            <span class="meta" id="lib-count">—</span>
+            <span class="meta">PDF / READ ONLINE</span>
+          </div>
+          <ul class="docs" id="doc-list" data-stagger></ul>
+          <div class="flinks-note docs-note">
+            <span>发现勘误或想转载引用？发邮件到 <b id="lib-mail">—</b>，注明文献编号即可。</span>
+            <span>OPEN ACCESS</span>
+          </div>
+        </div>
+
+        <aside class="section-rail" data-code="LIB / 001" aria-label="文献目录">
+          <strong>INDEX</strong><span>SPEC / PAPER</span>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         02 在线阅读
+         ====================================================================== -->
+    <section class="section section--flip section--reader reveal" id="reader">
+      <div class="section-grid">
+        <div class="section-intro">
+          <div>
+            <span class="section-number">02 / READER</span>
+            <h2 class="section-title"><small>ONLINE READER</small>在线阅读</h2>
+          </div>
+          <p class="section-copy">页面内直接阅读，文字可选中复制，Ctrl + F 可检索全文。</p>
+
+          <dl class="doc-spec" id="doc-spec" aria-label="当前文献信息"></dl>
+          <a class="btn doc-spec-dl" id="spec-download" href="#" download><span>下载 PDF</span><span>↓</span></a>
+
+          <div class="micro-code" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="content-stack">
+          <div class="rd" id="rd">
+            <div class="rd-bar" role="toolbar" aria-label="阅读器工具栏">
+              <div class="rd-doc">
+                <span class="tag tag--signal" id="rd-code">—</span>
+                <b id="rd-title">正在载入…</b>
+              </div>
+
+              <div class="rd-tools">
+                <div class="rd-group rd-group--nav" role="group" aria-label="翻页">
+                  <button class="rd-btn" id="rd-prev" type="button" aria-label="上一页" title="上一页（←）">←</button>
+                  <label class="rd-pageno">
+                    <input id="rd-page" type="text" inputmode="numeric" autocomplete="off" value="—" aria-label="页码，输入后回车跳转">
+                    <span id="rd-total">/ —</span>
+                  </label>
+                  <button class="rd-btn" id="rd-next" type="button" aria-label="下一页" title="下一页（→）">→</button>
+                </div>
+
+                <div class="rd-group rd-group--zoom" role="group" aria-label="缩放">
+                  <button class="rd-btn" id="rd-out" type="button" aria-label="缩小" title="缩小（-）">−</button>
+                  <output class="rd-scale" id="rd-scale" aria-live="polite">—</output>
+                  <button class="rd-btn" id="rd-in" type="button" aria-label="放大" title="放大（+）">+</button>
+                </div>
+
+                <div class="rd-group rd-group--fit" role="group" aria-label="适配方式">
+                  <button class="rd-btn rd-btn--text" id="rd-fit-width" type="button" aria-pressed="false" title="按宽度适配">适宽</button>
+                  <button class="rd-btn rd-btn--text" id="rd-fit-page" type="button" aria-pressed="false" title="整页适配">整页</button>
+                </div>
+
+                <div class="rd-group" role="group" aria-label="文件">
+                  <a class="rd-btn rd-btn--text" id="rd-download" href="#" download title="下载 PDF" aria-label="下载 PDF"><span class="rd-btn-label">下载</span></a>
+                  <button class="rd-btn" id="rd-full" type="button" aria-label="全屏阅读" title="全屏阅读">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path class="rd-ico-enter" d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/><path class="rd-ico-exit" d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="rd-progress" aria-hidden="true"><span id="rd-progress"></span></div>
+
+            <!-- 站内阅读器不可用（如 file:// 本地预览）时的提示条，下方改用浏览器内置阅读器 -->
+            <div class="rd-note" id="rd-note" hidden></div>
+
+            <div class="rd-body">
+              <div class="rd-stage" id="rd-stage" tabindex="0" aria-label="文献页面，← → 翻页，+ − 缩放">
+                <div class="rd-pages" id="rd-pages"></div>
+              </div>
+
+              <!-- 载入 / 出错状态层（内容由 library.js 写入；脚本不可用时显示 noscript 提示） -->
+              <div class="rd-status" id="rd-status" role="status" aria-live="polite">
+                <noscript>
+                  <div class="rd-error">
+                    <span class="tag">NO SCRIPT</span>
+                    <h3>站内阅读器需要启用 JavaScript</h3>
+                    <p>请在浏览器中启用 JavaScript 后刷新本页。</p>
+                  </div>
+                </noscript>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="section-rail section-rail--mute" data-code="LIB / 002" aria-label="在线阅读">
+          <strong>READER</strong><span>PDF / ONLINE</span>
+        </aside>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ==========================================================================
+     页脚（与首页一致）
+     ========================================================================== -->
+<footer class="footer" id="site-footer">
+  <div class="footer-top">
+    <div class="footer-sign">
+      <div class="mark" id="foot-mark" role="img" aria-label="YunSee"><span class="mark-fallback">YunSee</span></div>
+      <p class="footer-tag">BEYOND THE FLAG / INTO THE SYSTEM</p>
+    </div>
+
+    <div class="footer-cols">
+      <div>
+        <h4>站内</h4>
+        <a href="index.html#core">核心成员</a>
+        <a href="index.html#club">俱乐部成员</a>
+        <a href="index.html#awards">战队奖项</a>
+        <a href="index.html#projects">开源项目</a>
+        <a href="index.html#partners">合作伙伴</a>
+        <a href="index.html#friends">友链</a>
+        <a href="index.html#join">加入我们</a>
+      </div>
+      <div>
+        <h4>资源</h4>
+        <a id="foot-github" href="#" target="_blank" rel="noreferrer">GitHub 组织 ↗</a>
+        <a id="foot-wiki" href="#" target="_blank" rel="noreferrer">公开知识库 ↗</a>
+        <a href="index.html#projects">工具链一览</a>
+        <a href="library.html">文库 / 公开文献</a>
+      </div>
+      <div>
+        <h4>联系</h4>
+        <a id="foot-mail" href="#">—</a>
+        <span id="foot-qq">—</span>
+        <span id="foot-loc">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track" id="ticker-a"></div>
+    <div class="ticker-track" id="ticker-b"></div>
+  </div>
+
+  <div class="footer-bottom">
+    <span><b id="foot-name">YUNSEE</b> / CTF TEAM · <span id="foot-est">EST.</span></span>
+    <span id="build-stamp">BUILD / —</span>
+    <span>© <span id="year"></span> <span id="foot-name2">YunSee</span>. ALL RIGHTS RESERVED.</span>
+  </div>
+</footer>
+
+<script src="assets/vendor/vara.min.js"></script>
+<script src="assets/vendor/vara-font.js"></script>
+<script src="assets/js/data.js"></script>
+<!-- library.js 先于 main.js：目录需在 main.js 绑定滚动揭示前渲染好 -->
+<script src="assets/js/library.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

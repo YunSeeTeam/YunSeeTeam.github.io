@@ -1,6 +1,8 @@
 /* ==========================================================================
    YunSee CTF Team — 交互脚本
    纯静态：不发起任何网络请求，直接双击 index.html 即可运行。
+   首页与文库页共用本文件：<body data-page> 标出当前页，
+   页眉 / 主题 / 签名 / 页脚两页通用，加载屏与各章节渲染只在首页执行。
    ========================================================================== */
 (() => {
   'use strict';
@@ -9,6 +11,7 @@
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const HOME = (document.body.dataset.page || 'home') === 'home';
 
   const esc = v => String(v).replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -25,7 +28,9 @@
     projects: PROJECTS.length,
     national: AWARDS.filter(a => a.level === '国家级').length,
     intl:     AWARDS.filter(a => a.level === '国际').length,
-    champion: AWARDS.filter(a => /冠军|一等奖|第一/.test(a.rank)).length
+    champion: AWARDS.filter(a => /冠军|一等奖|第一/.test(a.rank)).length,
+    docs:     LIBRARY.length,
+    docPages: LIBRARY.reduce((n, d) => n + (Number(d.pages) || 0), 0)
   };
 
   /* ======================================================================
@@ -35,7 +40,7 @@
   const bootFill  = $('#boot-fill');
   const bootPct   = $('#boot-percent');
   const bootState = $('#boot-state');
-  const readout   = bootPct.parentElement;
+  const readout   = bootPct && bootPct.parentElement;   // 子页面没有加载屏
 
   let repeatVisit = false;
   try { repeatVisit = sessionStorage.getItem('yunsee-booted') === '1'; } catch (_) {}
@@ -150,6 +155,15 @@
     });
   }
 
+  /* 子页面没有加载屏：等首帧画出标题的初始位置后再进入 is-booted，
+     否则同一帧内加类不会触发过渡，标题与页眉签名会直接以完成态出现 */
+  function enterSubpage() {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      document.body.classList.add('is-booted');
+      drawMark('head');
+    }));
+  }
+
   /* ====================================================================
      手写签名 —— Vara.js + Pacifico 单线手写字体
      加载屏 / 页眉 / 页脚三处签名由 vendor 里的 Vara 包按真实字形逐笔绘制。
@@ -258,16 +272,19 @@
   /* ======================================================================
      02. 首屏
      ====================================================================== */
-  function renderHero() {
-    $('#hero-intro').textContent = SITE.intro;
-
-    // 成立年份只在 data.js 的 SITE.founded 里维护，页眉 / 首屏 / 页脚统一取这里
+  // 成立年份只在 data.js 的 SITE.founded 里维护，页眉 / 首屏 / 页脚统一取这里
+  function renderTopbar() {
     $('#topbar-sub').textContent = 'CTF TEAM\nEST. ' + SITE.founded;
-    $('#stat-founded').dataset.count = SITE.founded;
+  }
 
+  /* 大标题拆成逐字符裁切框，body 进入 is-booted 后逐字上滑。
+     不传 text 时拆 HTML 里写好的标题（子页面） */
+  function splitWordmark(text) {
     const wm = $('#wordmark-text');
+    if (!wm) return;
+    text = text || wm.textContent.trim();
     wm.textContent = '';
-    [...SITE.nameUpper].forEach((ch, i) => {
+    [...text].forEach((ch, i) => {
       const clip = document.createElement('span');
       clip.className = 'wm-clip';
       const span = document.createElement('span');
@@ -277,7 +294,12 @@
       clip.appendChild(span);
       wm.appendChild(clip);
     });
+  }
 
+  function renderHero() {
+    $('#hero-intro').textContent = SITE.intro;
+    $('#stat-founded').dataset.count = SITE.founded;
+    splitWordmark(SITE.nameUpper);
     document.title = SITE.name + ' // CTF TEAM';
   }
 
@@ -905,24 +927,33 @@
   /* ======================================================================
      启动
      ====================================================================== */
-  renderHero();
-  renderCore();
-  renderRosterFilter();
-  renderRoster();
-  renderClubTip();
-  renderAwards();
-  renderProjects();
-  renderPartners();
-  renderFriends();
-  renderJoin();
+  renderTopbar();
+  if (HOME) {
+    renderHero();
+    renderCore();
+    renderRosterFilter();
+    renderRoster();
+    renderClubTip();
+    renderAwards();
+    renderProjects();
+    renderPartners();
+    renderFriends();
+    renderJoin();
+  } else {
+    splitWordmark();
+  }
   renderFooter();
 
   initTheme();
   initNav();
-  initGridFill();
+  if (HOME) initGridFill();
   initMarks();
   initReveal();
   initCounters();
-  initJoinForm();
-  startBoot();
+  if (HOME) {
+    initJoinForm();
+    startBoot();
+  } else {
+    enterSubpage();
+  }
 })();

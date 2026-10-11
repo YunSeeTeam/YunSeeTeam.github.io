@@ -449,6 +449,12 @@ html[data-theme="dark"] .topbar.is-stuck { box-shadow: 0 12px 34px rgba(0, 0, 0,
 .topbar .btn { height: 38px; }
 .burger { display: none; }
 
+/* 文库入口：线框按钮与实心「加入战队」并排，悬停沿用信号色推入；
+   位于文库页时底部挂 3px 信号色条，与主导航的选中态同一语言 */
+.btn--lib { gap: 8px; padding: 0 15px; }
+.btn--lib svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.btn--lib[aria-current="page"] { box-shadow: inset 0 0 0 1px var(--line), inset 0 -3px 0 var(--signal); }
+
 /* 移动端全屏菜单 */
 .menu {
   position: fixed;
@@ -485,6 +491,7 @@ html[data-theme="dark"] .topbar.is-stuck { box-shadow: 0 12px 34px rgba(0, 0, 0,
   letter-spacing: .1em;
 }
 .menu.is-open a { opacity: 1; transform: none; transition-delay: calc(.06s + var(--i, 0) * .055s); }
+.menu a[aria-current="page"] i { padding: 3px 5px; color: #000; background: var(--signal); }
 
 /* --------------------------------------------------------------------------
    06. 右侧章节导航
@@ -1692,10 +1699,15 @@ html.theme-fallback body { animation: themeFade .4s var(--ease); }
 /* --------------------------------------------------------------------------
    18. 响应式
    -------------------------------------------------------------------------- */
-@media (max-width: 1240px) {
+/* 页眉的两个断点单独放：工具区多了「文库」按钮，主导航需要比网格更早收紧 / 收起，
+   否则 1241–1280、861–950 两段宽度下导航文字会被挤成两行 */
+@media (max-width: 1320px) {
   .topbar-sub { display: none; }
   .topnav a { padding: 10px 10px; font-size: 12px; }
   .topnav a i { display: none; }
+}
+
+@media (max-width: 1240px) {
   .core-grid, .proj-grid, .partner-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -1712,9 +1724,9 @@ html.theme-fallback body { animation: themeFade .4s var(--ease); }
   .kpi:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 980px) {
   .topnav { display: none; }
-  .topbar .btn--solid { display: none; }
+  .topbar-tools { margin-left: auto; }     /* 主导航收起后由工具区自己靠右 */
   .burger {
     display: grid;
     place-items: center;
@@ -1741,6 +1753,10 @@ html.theme-fallback body { animation: themeFade .4s var(--ease); }
   .burger.is-open span { background: transparent; }
   .burger.is-open span::before { transform: translateY(6px) rotate(45deg); }
   .burger.is-open span::after  { transform: translateY(-6px) rotate(-45deg); }
+}
+
+@media (max-width: 860px) {
+  .topbar .btn--solid { display: none; }
 
   .hero-meta { flex-direction: column; padding-right: 92px; }
   .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1789,6 +1805,11 @@ html.theme-fallback body { animation: themeFade .4s var(--ease); }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
   .boot-mark { transform: translateX(3vw); width: 76vw; }
   .boot-readout { left: 20px; }
+}
+
+@media (max-width: 360px) {
+  .btn--lib { padding: 0 13px; }
+  .btn--lib svg { display: none; }        /* 320 宽屏幕上给签名与汉堡按钮让位 */
 }
 
 /* --------------------------------------------------------------------------
