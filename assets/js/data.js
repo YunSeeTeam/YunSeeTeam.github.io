@@ -37,7 +37,8 @@ const FIELDS = [
   { key: 'IR',     label: '应急响应' },
   { key: 'DEV',    label: '软件开发' },
   { key: 'BC',     label: '区块链' },
-  { key: 'INT/AD',     label: '内网渗透' }
+  { key: 'INT/AD',     label: '内网渗透' },
+  { key: 'DataCom',     label: '数据通信' }
 ];
 
 /* --------------------------------------------------------------------------
@@ -199,7 +200,7 @@ const CLUB_MEMBERS = [
   { handle: 'dnw',        field: 'WEB',         since: 2025, status: '训练营' },
   { handle: 'jake',       field: 'WEB',         since: 2026, status: '训练营' },
   { handle: '小猫咪',     field: 'CRYPTO',      since: 2026, status: '训练营' },
-  { handle: 'Xray Wire Link',     field: 'WEB',      since: 2026, status: '训练营' },
+  { handle: 'Xray Wire Link',     field: 'DataCom',      since: 2026, status: '训练营' },
   { handle: 'Odlteyl',    field: 'WEB',         since: 2026, status: '训练营' },
   { handle: '晨肖',       field: 'RE',          since: 2026, status: '训练营' },
   { handle: '崔叔233',    field: 'IOT',         since: 2026, status: '训练营' },
